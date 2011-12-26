@@ -12,9 +12,22 @@ uses
 {$R *.res}
 
 procedure reduce(src, dst : string);
+var
+  cr : TColorReducer;
+  img : TBufImg;
+  dither : TPixelDither;
 begin
+  cr := TColorReducer.Create(pf4444);
+  img := TBufImg.Create;
+  img.load(src);
 
+  dither := TPixelDither.Create;
+  dither.ditherImage(img, cr);
 
+  img.save(dst);
+  dither.Free;
+  img.Free;
+  cr.Free;
 end;
 
 begin

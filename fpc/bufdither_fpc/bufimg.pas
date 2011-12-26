@@ -10,6 +10,7 @@ uses
 type
   TIntRGBA = array[0..3] of integer;
 
+  // originally from PixelProvider interface in java
   TBufImgBase = class
     public
       function isInBounds(x, y : integer) : boolean;virtual;abstract;
@@ -17,8 +18,8 @@ type
       procedure getPixelAt(byteofs : integer; out rgba : TIntRGBA);virtual;abstract;
       procedure setPixelAt(byteofs : integer; var rgba : TIntRGBA);virtual;abstract;
 
-      property width : integer;
-      property height : integer;
+      function getWidth : integer;virtual;abstract;
+      function getHeight : integer;virtual;abstract;
   end;
 
 
@@ -37,17 +38,15 @@ type
       procedure getPixelAt(byteofs : integer; out rgba : TIntRGBA);override;
       procedure setPixelAt(byteofs : integer; var rgba : TIntRGBA);override;
 
+      function getWidth : integer;override;
+      function getHeight : integer;override;
+
     private
       fwidth : integer;
       fheight : integer;
       buf : pbyte;
 
       function sz : longint;
-
-    public
-      property width : integer read fwidth;
-      property height : integer read fheight;
-
   end;
 
 implementation
@@ -80,12 +79,18 @@ begin
   BlockRead(f, fwidth, 4);
   BlockRead(f, fheight, 4);
 
+  //writeln('image ', fn, ' wh = ', fwidth, ', ', fheight);
+
   Freemem(buf);
 
   bufsz := sz;
   buf := GetMem(bufsz);
 
-  BlockRead(f, buf, bufsz);
+  //writeln('allocated ', bufsz);
+
+  BlockRead(f, buf^, bufsz);
+
+  //writeln('read image.');
 
   closeFile(f);
 end;
@@ -100,7 +105,7 @@ begin
   BlockWrite(f, fwidth, 4);
   BlockWrite(f, fheight, 4);
 
-  BlockWrite(f, buf, sz);
+  BlockWrite(f, buf^, sz);
 
   closeFile(f);
 end;
@@ -127,6 +132,16 @@ var i : longint;
 begin
   for i := 0 to 3 do
     buf[byteofs + i] := rgba[i];
+end;
+
+function TBufImg.getWidth: integer;
+begin
+  Result:=fwidth
+end;
+
+function TBufImg.getHeight: integer;
+begin
+  Result:=fheight;
 end;
 
 function TBufImg.sz: longint;
