@@ -1,0 +1,14 @@
+Image processing algorithms. Initially implemented dithering for RGBA4444.
+Distributed under BSD-like license, so use freely.
+
+This is a complete remake of my first dithering utility to process images 
+for OpenGL ES enabled devices to reduce colors from 32-bit to 16-bit.
+
+img2buf -- converts png to a simple binary format (width, height, bitmap data)
+for easy implementation of further processing in different programming 
+languages (experimenting etc.).
+
+The goal is to provide fast and easy to read and maintain implementations in
+different programming languages, i.e. optimized but not too much.
+
+bufdither_java -- dithering implementation in java.
