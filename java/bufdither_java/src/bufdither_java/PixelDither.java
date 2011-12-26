@@ -14,11 +14,14 @@ public class PixelDither {
     
     public void ditherImage(PixelProvider img, ColorReducer cr) {        
         this.img = img;
-        int w = img.getWidth();
-        int h = img.getHeight();
+        final int w = img.getWidth();        
+        final int h = img.getHeight();
         int [] rgba = new int[4];
         int [] rgbaReduced = new int[4];
         int ofs;
+        
+        final int lastRow = h-1;
+        final int lastColumn = w-1;
         
         
         for(int y = 0; y < h; ++y)
@@ -34,9 +37,11 @@ public class PixelDither {
                 //////////////////////////
                 // order, apply error to original pixels
                 // (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
+                
+                
                 correctPixel(x-1, y+1, 3);
                 correctPixel(x, y+1, 5);
-                correctPixel(x+1, y+1, 1);
+                correctPixel(x+1, y+1, 1);                
                 correctPixel(x+1, y, 7);                                 
             }
         
