@@ -34,7 +34,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/BufImg.o \
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/PixelDither.o \
+	${OBJECTDIR}/ColorReducer.o \
+	${OBJECTDIR}/PixelProvider.o
 
 
 # C Compiler Flags
@@ -61,10 +65,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bufdither_cpp: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/bufdither_cpp ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/BufImg.o: BufImg.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/BufImg.o BufImg.cpp
+
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/PixelDither.o: PixelDither.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/PixelDither.o PixelDither.cpp
+
+${OBJECTDIR}/ColorReducer.o: ColorReducer.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ColorReducer.o ColorReducer.cpp
+
+${OBJECTDIR}/PixelProvider.o: PixelProvider.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/PixelProvider.o PixelProvider.cpp
 
 # Subprojects
 .build-subprojects:

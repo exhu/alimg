@@ -21,12 +21,20 @@ public:
     int getHeight();
     /// returns false if x,y is out of bounds
     int ofs(int x, int y);   
-    void setPixelAt(int byteofs, IntRGBA rgba);
-    void getPixelAt(int byteofs, IntRGBA rgba);
+    void setPixelAt(int byteofs, const IntRGBA & rgba);
+    void getPixelAt(int byteofs, IntRGBA & rgba);
+    
+    ////
+    
+    void load(const char * fn);
+    void save(const char * fn);
 private:
     
     int w,h;
     char * buf;
+    
+    
+    int sz();
 
 };
 

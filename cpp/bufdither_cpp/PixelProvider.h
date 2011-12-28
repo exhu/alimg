@@ -18,8 +18,8 @@ public:
     virtual int getHeight() = 0;
     /// returns false if x,y is out of bounds
     virtual int ofs(int x, int y) = 0;
-    virtual void setPixelAt(int byteofs, IntRGBA rgba) = 0;
-    virtual void getPixelAt(int byteofs, IntRGBA rgba) = 0;
+    virtual void setPixelAt(int byteofs, const IntRGBA & rgba) = 0;
+    virtual void getPixelAt(int byteofs, IntRGBA & rgba) = 0;
 };
 
 #endif	/* PIXELPROVIDER_H */
