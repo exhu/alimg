@@ -12,6 +12,8 @@ typedef int IntRGBA[4];
 
 class PixelProvider {
 public:
+    virtual ~PixelProvider() {};
+    
     virtual bool isInBounds(int x, int y) = 0;
     
     virtual int getWidth() = 0;

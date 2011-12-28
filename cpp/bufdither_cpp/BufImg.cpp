@@ -53,9 +53,11 @@ void BufImg::load(const char * fn) {
     fread(&w, sizeof(w), 1, f);
     fread(&h, sizeof(h), 1, f);
     
+    //printf("image wh = %i, %i\n", w, h);
+    
     delete buf;
     
-    buf = new char[sz()];
+    buf = new unsigned char[sz()];
     fread(buf, sz(), 1, f);
     
     fclose(f);    

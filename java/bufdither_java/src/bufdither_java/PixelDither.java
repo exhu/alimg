@@ -50,7 +50,7 @@ public class PixelDither {
         this.img = null;
     }
     
-    private void correctPixel(int x, int y, int coef) {        
+    private void correctPixel(int x, int y, int coef) {
         if (img.isInBounds(x, y)) {
             int ofs = img.ofs(x, y);
             img.getPixelAt(ofs, rgbaTemp);

@@ -31,7 +31,7 @@ public:
 private:
     
     int w,h;
-    char * buf;
+    unsigned char * buf;
     
     
     int sz();

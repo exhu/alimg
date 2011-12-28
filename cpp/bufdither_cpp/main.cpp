@@ -21,10 +21,11 @@ static void reduce(const char * src, const char * dst) {
     PixelDither * dither = new PixelDither();
     ColorReducer * reducer = new ColorReducer(ColorReducer::pf4444);
 
-    for(int i = 0; i < 100; ++i)
-        dither->ditherImage(img, reducer);
+    
+    dither->ditherImage(img, reducer);
 
     img->save(dst);
+    //printf("saved.\n");
     
     delete reducer;
     delete dither;
@@ -37,6 +38,7 @@ static void reduce(const char * src, const char * dst) {
 int main(int argc, char** argv) {
     printf("bufdither_cpp in.buf out.buf\n");
         
+    
     for(int i = 0; i < 100; ++i)
         reduce(argv[1], argv[2]);
 
