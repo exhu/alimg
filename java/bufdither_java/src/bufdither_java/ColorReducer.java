@@ -24,13 +24,15 @@ public class ColorReducer {
     private Downgrade downgr;
 
     public ColorReducer(PixelFormat targetPf) {
+        initLookups();
         switch (targetPf) {
             case pf4444:
                 downgr = new Downgrade() {
 
                     @Override
                     public int downgradeComponent(int a, int cNum) {
-                        return downgrade(a, 4);
+                        //return downgrade(a, 4);
+                        return lookup4[a];
                     }
                 };
                 break;
@@ -84,5 +86,12 @@ public class ColorReducer {
         int maxv = ((1 << targetBitCount) - 1);
         // ((a / 255.f) * maxv) / maxv * 255.f
         return a * maxv / 255 * 255 / maxv;
+    }
+    
+    private static int [] lookup4 = new int[256];
+    private static void initLookups() {
+        for(int i = 0; i < 256; ++i) {
+            lookup4[i] = downgrade(i, 4);
+        }
     }
 }

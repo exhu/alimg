@@ -54,7 +54,7 @@ public final class BufImg implements PixelProvider {
     
     @Override
     public int ofs(int x, int y) {
-        return y*w*4 + x*4;
+        return (y*w + x)*4;
     }
     
     private int sz() {

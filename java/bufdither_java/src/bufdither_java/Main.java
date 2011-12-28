@@ -18,9 +18,8 @@ public class Main {
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         System.out.println("bufdither_java in.buf out.buf");
-        
-        for(int i = 0; i < 100; ++i)
-            reduce(args[0], args[1]);
+                
+        reduce(args[0], args[1]);
     }
     
     static void reduce(String src, String dst) throws FileNotFoundException, IOException {
@@ -30,7 +29,8 @@ public class Main {
         PixelDither dither = new PixelDither();
         ColorReducer reducer = new ColorReducer(ColorReducer.PixelFormat.pf4444);
         
-        dither.ditherImage(img, reducer);
+        for(int i = 0; i < 100; ++i)
+            dither.ditherImage(img, reducer);
         
         img.save(dst);
         
