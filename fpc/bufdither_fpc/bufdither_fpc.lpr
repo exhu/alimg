@@ -16,13 +16,16 @@ var
   cr : TColorReducer;
   img : TBufImg;
   dither : TPixelDither;
+  i : integer;
 begin
   cr := TColorReducer.Create(pf4444);
   img := TBufImg.Create;
   img.load(src);
 
   dither := TPixelDither.Create;
-  dither.ditherImage(img, cr);
+
+  for i := 1 to 100 do
+      dither.ditherImage(img, cr);
 
   img.save(dst);
   dither.Free;
@@ -30,9 +33,11 @@ begin
   cr.Free;
 end;
 
+
 begin
   writeln('bufdither_java in.buf out.buf');
-  reduce(ParamStr(1), ParamStr(2));
 
+
+  reduce(ParamStr(1), ParamStr(2));
 end.
 

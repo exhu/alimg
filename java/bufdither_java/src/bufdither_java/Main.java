@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package bufdither_java;
+package bufdither_java; 
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +18,9 @@ public class Main {
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         System.out.println("bufdither_java in.buf out.buf");
-        reduce(args[0], args[1]);
+        
+        for(int i = 0; i < 100; ++i)
+            reduce(args[0], args[1]);
     }
     
     static void reduce(String src, String dst) throws FileNotFoundException, IOException {
