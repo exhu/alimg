@@ -8,10 +8,14 @@
 
 #include "ColorReducer.h"
 
+int ColorReducer::downgrade4lookup[256];
+
 ColorReducer::ColorReducer(PixelFormat targetPf) : downgr(NULL){
+    initlookups();
     switch(targetPf) {
         case pf4444:
             downgr = & ColorReducer::downgrade4444;
+            
             break;
             
         case pf565:
@@ -45,7 +49,8 @@ int ColorReducer::downgrade(int a, int targetBitCount) {
 
 
 int ColorReducer::downgrade4444(int a, int cNum) {
-    return downgrade(a, 4);
+    //return downgrade(a, 4);
+    return downgrade4lookup[a];
 }
 
 int ColorReducer::downgrade565(int a, int cNum) {
@@ -61,4 +66,11 @@ int ColorReducer::downgrade5551(int a, int cNum) {
         return downgrade(a, 1);
     
     return downgrade(a, 5);
+}
+
+void ColorReducer::initlookups() {
+    for(int i = 0; i < 256; ++i) {
+        downgrade4lookup[i] = downgrade(i, 4);
+    }
+    
 }

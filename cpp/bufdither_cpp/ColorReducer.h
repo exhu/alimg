@@ -25,6 +25,9 @@ public:
     void reduceToClosest(const IntRGBA & rgba, IntRGBA & destRGBA);
     
 private:
+    static int downgrade4lookup[256];
+    static void initlookups();
+    
     typedef int (*DowngradeComponentFunc)(int a, int cNum);
     
     DowngradeComponentFunc downgr;
