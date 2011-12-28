@@ -35,7 +35,7 @@ end;
 
 
 begin
-  writeln('bufdither_java in.buf out.buf');
+  writeln('bufdither_fpc in.buf out.buf');
 
 
   reduce(ParamStr(1), ParamStr(2));

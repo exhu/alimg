@@ -117,21 +117,27 @@ end;
 
 function TBufImg.getOfs(x, y: integer): longint;
 begin
-  Result:= y * fwidth * 4 + x*4;
+  Result:= (y * fwidth + x)*4;//y * fwidth * 4 + x*4;
 end;
 
 procedure TBufImg.getPixelAt(byteofs: integer; out rgba: TIntRGBA);
 var i : longint;
 begin
   for i := 0 to 3 do
-    rgba[i] := buf[byteofs + i];
+    begin
+      rgba[i] := buf[byteofs];
+      inc(byteofs);
+    end;
 end;
 
 procedure TBufImg.setPixelAt(byteofs: integer; var rgba: TIntRGBA);
 var i : longint;
 begin
   for i := 0 to 3 do
-    buf[byteofs + i] := rgba[i];
+    begin
+      buf[byteofs] := rgba[i];
+      inc(byteofs);
+    end;
 end;
 
 function TBufImg.getWidth: integer;

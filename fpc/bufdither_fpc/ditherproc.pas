@@ -40,7 +40,7 @@ type
 
       procedure calcDiff(var rgba : TIntRGBA; var rgbaReduced : TIntRGBA);
       procedure adjustTemp(coef : integer);inline;
-      procedure correctPixel(x, y, coef : integer);
+      procedure correctPixel(x, y, coef : integer);inline;
   end;
 
 implementation
@@ -168,7 +168,7 @@ begin
 end;
 
 // secon most time consuming function according to the profile data
-procedure TPixelDither.adjustTemp(coef: integer);inline;
+procedure TPixelDither.adjustTemp(coef: integer);
 var
   i : integer;
 begin
