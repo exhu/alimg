@@ -9,6 +9,9 @@
 
 #include "PixelDither.h"
 
+//#include <emmintrin.h>
+
+
 PixelDither::PixelDither() : img(NULL) {
 }
 
@@ -63,10 +66,30 @@ void PixelDither::correctPixel(int x, int y, int coef) {
 }
 
 void PixelDither::adjustTemp(int coef) {
+#if 1
     for (int i = 0; i < 4; ++i) {
         rgbaTemp[i] = rgbaTemp[i] + rgbaDiff[i] * coef / 16;
         rgbaTemp[i] = clamp(rgbaTemp[i]);
     }
+#else
+    __m128i* prgbaDiff = (__m128i*)&rgbaDiff;
+    __m128i* prgbaTemp = (__m128i*)&rgbaTemp;
+    
+    __m128i minr = {0};
+    __m128i maxr = {255};
+    
+    __m128i ccoef = {coef};
+    __m128i mult = _mm_mul_epu32(*prgbaDiff, ccoef);
+    __m128i shift = {4};
+    mult = _mm_srl_epi32(mult, shift);
+    
+    *prgbaTemp = _mm_add_epi32(*prgbaTemp, mult);
+                
+    for (int i = 0; i < 4; ++i) {    
+        rgbaTemp[i] = clamp(rgbaTemp[i]);
+    }
+    
+#endif
 }
 
 int PixelDither::clamp(int v) {
@@ -80,7 +103,16 @@ int PixelDither::clamp(int v) {
 }
 
 void PixelDither::calcDiff(const IntRGBA & rgba, const IntRGBA & rgbaReduced) {
+#if 1
     for(int n = 0; n < 4; ++n) {
         rgbaDiff[n] = rgba[n] - rgbaReduced[n];
     }
+#else
+    __m128i* prgba = (__m128i*)&rgba[0];
+    __m128i* prgbaReduced = (__m128i*)&rgbaReduced;
+    __m128i* prgbaDiff = (__m128i*)&rgbaDiff;
+    
+    *prgbaDiff = _mm_sub_epi32(*prgba, *prgbaReduced);    
+   
+#endif    
 }
