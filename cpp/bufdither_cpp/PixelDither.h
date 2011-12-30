@@ -19,8 +19,8 @@ public:
     virtual ~PixelDither();
     
 private:
-    IntRGBA rgbaDiff;
-    IntRGBA rgbaTemp;
+    IntRGBA rgbaDiff;// __attribute__((aligned(16)));
+    IntRGBA rgbaTemp;//  __attribute__((aligned(16)));
     PixelProvider * img;
     
     void correctPixel(int x, int y, int coef);

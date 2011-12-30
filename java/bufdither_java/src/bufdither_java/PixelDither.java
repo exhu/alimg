@@ -20,8 +20,8 @@ public class PixelDither {
         int [] rgbaReduced = new int[4];
         int ofs;
         
-        final int lastRow = h-1;
-        final int lastColumn = w-1;
+        //final int lastRow = h-1;
+        //final int lastColumn = w-1;
         
         
         for(int y = 0; y < h; ++y)

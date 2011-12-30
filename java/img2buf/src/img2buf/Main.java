@@ -32,17 +32,18 @@ public class Main {
             Main.BufToPng(args[1], args[2]);
     }
     
-    static void getPixel(BufferedImage img, int x, int y, int[] rgba) {
-        int[] pixel = new int[4];
+    private static int[] pixel = new int[4];
+    
+    static void getPixel(BufferedImage img, int x, int y, int[] rgba) {        
         // get pixel data
         img.getRaster().getPixel(x, y, pixel);
         // convert to RGBA
         img.getColorModel().getComponents(pixel, rgba, 0);
     }
     
+    
+    private static byte[] elements = new byte[4];
     static void putPixel(BufferedImage img, int x, int y, int[] rgba) {
-        byte[] elements = new byte[4];
-        
         img.getColorModel().getDataElements(rgba, 0, elements);
         // put converted
         img.getRaster().setDataElements(x, y, elements);
