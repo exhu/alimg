@@ -34,16 +34,26 @@ namespace bufdither_net
 			return (y*w + x)*4;
 		}
 
-		public void setPixelAt (int byteofs, int[] rgba)
+		public unsafe void setPixelAt (int byteofs, int[] rgba)
 		{
-			for(int n = 0; n < 4; ++n)
-            	buf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+			fixed(byte * pbuf = buf)
+			{
+				for(int n = 0; n < 4; ++n)
+				{
+	            	//buf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+					pbuf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+				}
+			}
 		}
 
-		public void getPixelAt (int byteofs, int[] rgba)
+		public unsafe void getPixelAt (int byteofs, int[] rgba)
 		{
-			for(int n = 0; n < 4; ++n)
-            	rgba[n] = (int)buf[byteofs+n] & 0xFF;
+			fixed(byte * pbuf = buf)
+			{
+				for(int n = 0; n < 4; ++n)
+	            	//rgba[n] = (int)buf[byteofs+n] & 0xFF;
+					rgba[n] = (int)pbuf[byteofs+n] & 0xFF;
+			}
 		}
 		
 		private int sz() {
