@@ -2,23 +2,23 @@ using System;
 
 namespace bufdither_net
 {
-	public class PixelDither
+	public unsafe class PixelDither
 	{
 		public PixelDither ()
 		{
 		}
 		
-		private int[] rgbaDiff = new int[4];
+		private RGBA rgbaDiff;
 		private PixelProvider img;
-		private int[] rgbaTemp = new int[4];
+		private RGBA rgbaTemp;
     
 		public void ditherImage (PixelProvider img, ColorReducer cr)
 		{        
 			this.img = img;
 			int w = img.getWidth ();        
 			int h = img.getHeight ();
-			int [] rgba = new int[4];
-			int [] rgbaReduced = new int[4];
+			RGBA rgba = new RGBA();
+			RGBA rgbaReduced = new RGBA();
 			int ofs;
         
 			//final int lastRow = h-1;
@@ -28,12 +28,12 @@ namespace bufdither_net
 			for (int y = 0; y < h; ++y)
 				for (int x = 0; x < w; ++x) {
 					ofs = img.ofs (x, y);
-					img.getPixelAt (ofs, rgba);
-					cr.reduceToClosest (rgba, rgbaReduced);
-					img.setPixelAt (ofs, rgbaReduced);
+					img.getPixelAt (ofs, ref rgba);
+					cr.reduceToClosest (ref rgba, ref rgbaReduced);
+					img.setPixelAt (ofs, ref rgbaReduced);
                 
                 
-					calcDiff (rgba, rgbaReduced);
+					calcDiff (ref rgba, ref rgbaReduced);
                 
 					//////////////////////////
 					// order, apply error to original pixels
@@ -55,18 +55,21 @@ namespace bufdither_net
 		{
 			if (img.isInBounds (x, y)) {
 				int ofs = img.ofs (x, y);
-				img.getPixelAt (ofs, rgbaTemp);
+				img.getPixelAt (ofs, ref rgbaTemp);
 				adjustTemp (coef);
-				img.setPixelAt (ofs, rgbaTemp);
+				img.setPixelAt (ofs, ref rgbaTemp);
 			}
 		}
     
 		private void adjustTemp (int coef)
 		{
-			for (int i = 0; i < 4; ++i) {
-				rgbaTemp [i] = rgbaTemp [i] + rgbaDiff [i] * coef / 16;
-				rgbaTemp [i] = clamp (rgbaTemp [i]);
-			}            
+			fixed(int * prgbaTemp = rgbaTemp.rgba, prgbaDiff = rgbaDiff.rgba)
+			{
+				for (int i = 0; i < 4; ++i) {
+					prgbaTemp[i] = prgbaTemp[i] + prgbaDiff[i] * coef / 16;
+					prgbaTemp[i] = clamp (prgbaTemp[i]);
+				}
+			}
 		}
     
 		private static int clamp (int v)
@@ -80,10 +83,13 @@ namespace bufdither_net
 			return v;
 		}
     
-		private void calcDiff (int [] rgba, int [] rgbaReduced)
+		private void calcDiff (ref RGBA rgba, ref RGBA rgbaReduced)
 		{
+			fixed(int * prgbaDiff = rgbaDiff.rgba, prgba = rgba.rgba, prgbaReduced = rgbaReduced.rgba)
+			{
 			for (int n = 0; n < 4; ++n) {
-				rgbaDiff [n] = rgba [n] - rgbaReduced [n];
+				prgbaDiff[n] = prgba [n] - prgbaReduced[n];
+			}
 			}
 		}
 

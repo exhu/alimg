@@ -2,7 +2,7 @@ using System;
 
 namespace bufdither_net
 {
-	public class ColorReducer
+	public unsafe class ColorReducer
 	{
 		delegate int Downgrade (int a, int cNum);
 		
@@ -56,10 +56,13 @@ namespace bufdither_net
 			}
 		}
 		
-		public void reduceToClosest (int[] rgba, int[] destRGBA)
+		public void reduceToClosest (ref RGBA rgba, ref RGBA destRGBA)
 		{
+			fixed(int*prgba = rgba.rgba, pdestRGBA = destRGBA.rgba)
+			{
 			for (int i = 0; i < 4; ++i) {
-				destRGBA [i] = downgr (rgba [i], i);
+				pdestRGBA[i] = downgr (prgba[i], i);
+			}
 			}
 		}
 

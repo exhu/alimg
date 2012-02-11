@@ -3,7 +3,8 @@ using System.IO;
 
 namespace bufdither_net
 {
-	public class BufImg : PixelProvider
+	
+	public unsafe class BufImg : PixelProvider
 	{
 		private byte [] buf;
     	private int w,h;
@@ -34,25 +35,34 @@ namespace bufdither_net
 			return (y*w + x)*4;
 		}
 
-		public unsafe void setPixelAt (int byteofs, int[] rgba)
+		public unsafe void setPixelAt (int byteofs, ref RGBA rgba)
 		{
 			fixed(byte * pbuf = buf)
 			{
-				for(int n = 0; n < 4; ++n)
+				fixed(int*prgba = rgba.rgba)
 				{
-	            	//buf[byteofs+n] = (byte)(rgba[n] & 0xFF);
-					pbuf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+					for(int n = 0; n < 4; ++n)
+					{
+		            	//buf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+						
+						pbuf[byteofs+n] = (byte)(prgba[n] & 0xFF);
+						
+					}
 				}
 			}
 		}
 
-		public unsafe void getPixelAt (int byteofs, int[] rgba)
+		public unsafe void getPixelAt (int byteofs, ref RGBA rgba)
 		{
 			fixed(byte * pbuf = buf)
 			{
+				fixed(int*prgba = rgba.rgba)
+				{
 				for(int n = 0; n < 4; ++n)
 	            	//rgba[n] = (int)buf[byteofs+n] & 0xFF;
-					rgba[n] = (int)pbuf[byteofs+n] & 0xFF;
+					prgba[n] = (int)pbuf[byteofs+n] & 0xFF;
+			
+				}
 			}
 		}
 		
