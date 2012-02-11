@@ -4,19 +4,16 @@
  */
 package bufdither_java;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.ByteBuffer;
 
 /**
  *
  * @author yur
  */
 public final class BufImg implements PixelProvider {
-    byte buf[];
+    //byte buf[];
+    ByteBuffer buf;
     int w,h;
     
     BufImg() {
@@ -25,11 +22,14 @@ public final class BufImg implements PixelProvider {
         buf = null;
     }
     
+    /*
     BufImg(int w, int h) {
         this.w = w;
         this.h = h;
         buf = new byte[sz()];
     }
+    * 
+    */
     
     void load(String fn) throws FileNotFoundException, IOException {
         FileInputStream fin = new FileInputStream(fn);
@@ -37,10 +37,12 @@ public final class BufImg implements PixelProvider {
         w = readInt(fin);
         h = readInt(fin);
         
-        buf = new byte[sz()];
+        //buf = new byte[sz()];
+        buf = ByteBuffer.allocate(sz());
         
-        fin.read(buf);
-        
+        //fin.read(buf);
+        fin.getChannel().read(buf);
+        fin.getChannel().close();
         fin.close();        
     }
     
@@ -48,7 +50,9 @@ public final class BufImg implements PixelProvider {
         FileOutputStream fout = new FileOutputStream(fn);
         writeInt(fout, w);
         writeInt(fout, h);
-        fout.write(buf);
+        //fout.write(buf);
+        fout.getChannel().write(buf);
+        fout.getChannel().close();
         fout.close();
     }
     
@@ -64,13 +68,20 @@ public final class BufImg implements PixelProvider {
     @Override
     public void setPixelAt(int byteofs, int rgba[]) {
         for(int n = 0; n < 4; ++n)
-            buf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+        {
+            byte b = (byte)(rgba[n] & 0xFF);
+            buf.put(byteofs, b);
+            //buf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+        }
     }
     
     @Override
     public void getPixelAt(int byteofs, int rgba[]) {
         for(int n = 0; n < 4; ++n)
-            rgba[n] = (int)buf[byteofs+n] & 0xFF;        
+        {
+            //rgba[n] = (int)buf[byteofs+n] & 0xFF;
+            rgba[n] = (int)buf.get(byteofs+n) & 0xFF;
+        }
     }
     
     /*
