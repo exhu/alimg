@@ -66,7 +66,7 @@ public final class BufImg : PixelProvider {
         //    buf[byteofs+n] = cast(byte)(rgba[n] & 0xFF);
         
         foreach(n, e; rgba.elems)
-			buf[byteofs+n] = cast(byte)(e & 0xFF);
+			buf.ptr[byteofs+n] = cast(byte)(e & 0xFF);
         
     }
     
@@ -75,7 +75,7 @@ public final class BufImg : PixelProvider {
         //for(int n = 0; n < 4; ++n)
         //    rgba[n] = cast(int)buf[byteofs+n] & 0xFF;
         foreach(n, ref e; rgba.elems)
-		    e = cast(int)buf[byteofs+n] & 0xFF;
+		    e = cast(int)buf.ptr[byteofs+n] & 0xFF;
     }
     
 

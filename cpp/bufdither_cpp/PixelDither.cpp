@@ -64,7 +64,7 @@ void PixelDither::correctPixel(int x, int y, int coef) {
         img->setPixelAt(ofs, rgbaTemp);
     }   
 }
-
+#if 0
 void PixelDither::adjustTemp(int coef) {
 #if 1
     for (int i = 0; i < 4; ++i) {
@@ -101,7 +101,9 @@ int PixelDither::clamp(int v) {
         
     return v;
 }
+#endif
 
+#if 0
 void PixelDither::calcDiff(const IntRGBA & rgba, const IntRGBA & rgbaReduced) {
 #if 1
     for(int n = 0; n < 4; ++n) {
@@ -116,3 +118,4 @@ void PixelDither::calcDiff(const IntRGBA & rgba, const IntRGBA & rgbaReduced) {
    
 #endif    
 }
+#endif

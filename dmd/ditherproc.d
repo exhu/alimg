@@ -58,7 +58,7 @@ class ColorReducer {
         //for (int i = 0; i < 4; ++i) 
         foreach(i, e; rgba.elems) {
             //destRGBA.elems[i] = downgr(rgba.elems[i], i);
-            destRGBA.elems[i] = downgr(e, i);
+            destRGBA.elems.ptr[i] = downgr(e, i);
         }
     }
 
@@ -71,7 +71,7 @@ class ColorReducer {
     
     private static int [256] lookup4;
     private static void initLookups() {
-        for(int i = 0; i < 256; ++i) {
+        for(int i = 0; i < lookup4.length; ++i) {
             lookup4[i] = downgrade(i, 4);
         }
     }
@@ -80,8 +80,8 @@ class ColorReducer {
 
 public class PixelDither {
     private RGBA rgbaDiff;
-    private PixelProvider img;
     private RGBA rgbaTemp;
+    private PixelProvider img;
     
     public void ditherImage(PixelProvider img, ColorReducer cr) {        
         this.img = img;
@@ -167,7 +167,7 @@ public class PixelDither {
             rgbaDiff[n] = rgba[n] - rgbaReduced[n];
         }*/
         foreach(n, ref e; rgbaDiff.elems) {
-			e = rgba.elems[n] - rgbaReduced.elems[n];
+			e = rgba.elems.ptr[n] - rgbaReduced.elems.ptr[n];
 		}
     }
 
