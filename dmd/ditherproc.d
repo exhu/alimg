@@ -54,9 +54,11 @@ class ColorReducer {
         }
     }
 
-    public final void reduceToClosest(ref RGBA rgba, ref RGBA destRGBA) {
-        for (int i = 0; i < 4; ++i) {
-            destRGBA[i] = downgr(rgba[i], i);
+    public final void reduceToClosest(ref const RGBA rgba, ref RGBA destRGBA) {
+        //for (int i = 0; i < 4; ++i) 
+        foreach(i, e; rgba.elems) {
+            //destRGBA.elems[i] = downgr(rgba.elems[i], i);
+            destRGBA.elems[i] = downgr(e, i);
         }
     }
 
@@ -88,9 +90,10 @@ public class PixelDither {
         RGBA rgba;
         RGBA rgbaReduced;
         int ofs;
+        bool notLastRow, notLastCol;
         
-        //final int lastRow = h-1;
-        //final int lastColumn = w-1;
+        const int lastRow = h-1;
+        const int lastCol = w-1;
         
         
         for(int y = 0; y < h; ++y)
@@ -103,15 +106,26 @@ public class PixelDither {
                 
                 calcDiff(rgba, rgbaReduced);
                 
+                
                 //////////////////////////
                 // order, apply error to original pixels
                 // (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
                 
+                notLastRow = (y < lastRow);
+				notLastCol = (x < lastCol);
                 
-                correctPixel(x-1, y+1, 3);
-                correctPixel(x, y+1, 5);
-                correctPixel(x+1, y+1, 1);                
-                correctPixel(x+1, y, 7);                                 
+                if (notLastRow) {
+					if (x > 0)
+						correctPixel(x-1, y+1, 3);
+				
+					correctPixel(x, y+1, 5);
+					
+					if (notLastCol)
+						correctPixel(x+1, y+1, 1);
+				}
+                
+                if (notLastCol)    
+					correctPixel(x+1, y, 7);                                 
             }
         
         
@@ -120,19 +134,22 @@ public class PixelDither {
     }
     
     private void correctPixel(int x, int y, int coef) {
-        if (img.isInBounds(x, y)) {
+        //if (img.isInBounds(x, y)) {
             int ofs = img.ofs(x, y);
             img.getPixelAt(ofs, rgbaTemp);
             adjustTemp(coef);
             img.setPixelAt(ofs, rgbaTemp);
-        }
+        //}
     }
     
     private void adjustTemp(int coef) {
-        for (int i = 0; i < 4; ++i) {
+        /*for (int i = 0; i < 4; ++i) {
             rgbaTemp[i] = rgbaTemp[i] + rgbaDiff[i] * coef / 16;
             rgbaTemp[i] = clamp(rgbaTemp[i]);
-        }            
+        }*/
+        foreach(i, ref e; rgbaTemp.elems) {
+			e = clamp(e + rgbaDiff.elems[i] * coef / 16);
+		}           
     }
     
     private static int clamp(int v) {
@@ -145,10 +162,13 @@ public class PixelDither {
         return v;
     }
     
-    private void calcDiff(ref RGBA rgba, ref RGBA rgbaReduced) {
-        for(int n = 0; n < 4; ++n) {
+    private void calcDiff(ref const RGBA rgba, ref const RGBA rgbaReduced) {
+        /*for(int n = 0; n < 4; ++n) {
             rgbaDiff[n] = rgba[n] - rgbaReduced[n];
-        }
+        }*/
+        foreach(n, ref e; rgbaDiff.elems) {
+			e = rgba.elems[n] - rgbaReduced.elems[n];
+		}
     }
 
 }

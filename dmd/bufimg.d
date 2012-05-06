@@ -1,7 +1,11 @@
 module bufimg;
 import std.stdio;
 
-alias int [4] RGBA;
+//alias int [4] RGBA;
+union RGBA {
+	int [4] elems;
+	int r,g,b,a;
+}
 
 interface PixelProvider {
 	bool isInBounds(int x, int y);
@@ -10,7 +14,7 @@ interface PixelProvider {
     int getHeight();
     /// returns false if x,y is out of bounds
     int ofs(int x, int y);   
-    void setPixelAt(int byteofs, ref RGBA rgba);
+    void setPixelAt(int byteofs, ref const RGBA rgba);
     void getPixelAt(int byteofs, ref RGBA rgba);
 }
 
@@ -57,15 +61,21 @@ public final class BufImg : PixelProvider {
     }
     
     
-    public void setPixelAt(int byteofs, ref RGBA rgba) {
-        for(int n = 0; n < 4; ++n)
-            buf[byteofs+n] = cast(byte)(rgba[n] & 0xFF);
+    public void setPixelAt(int byteofs, ref const RGBA rgba) {
+        //for(int n = 0; n < 4; ++n)
+        //    buf[byteofs+n] = cast(byte)(rgba[n] & 0xFF);
+        
+        foreach(n, e; rgba.elems)
+			buf[byteofs+n] = cast(byte)(e & 0xFF);
+        
     }
     
     
     public void getPixelAt(int byteofs, ref RGBA rgba) {
-        for(int n = 0; n < 4; ++n)
-            rgba[n] = cast(int)buf[byteofs+n] & 0xFF;        
+        //for(int n = 0; n < 4; ++n)
+        //    rgba[n] = cast(int)buf[byteofs+n] & 0xFF;
+        foreach(n, ref e; rgba.elems)
+		    e = cast(int)buf[byteofs+n] & 0xFF;
     }
     
 
