@@ -33,8 +33,8 @@ extern "C" {
 
     int buf_img_ofs(buf_img * img, int x, int y);
     bool buf_img_is_in_bounds(buf_img * img, int x, int y);
-    int buf_img_get_width(buf_img * img);
-    int buf_img_get_height(buf_img * img);
+    //int buf_img_get_width(buf_img * img);
+    //int buf_img_get_height(buf_img * img);
     
     void buf_img_set_pixel(buf_img * img, int ofs, const trgba * v);
     void buf_img_get_pixel(buf_img * img, int ofs, trgba * out_v);

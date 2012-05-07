@@ -51,6 +51,7 @@ bool buf_img_is_in_bounds(buf_img * img, int x, int y) {
 }
 
 
+/*
 int buf_img_get_width(buf_img * img) {
     return img->w;
 }
@@ -59,6 +60,7 @@ int buf_img_get_width(buf_img * img) {
 int buf_img_get_height(buf_img * img) {
     return img->h;
 }
+*/
 
 
 void buf_img_set_pixel(buf_img * img, int ofs, const trgba * v) {

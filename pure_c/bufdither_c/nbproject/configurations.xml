@@ -14,7 +14,11 @@
                    projectFiles="true">
       <itemPath>buf_img.c</itemPath>
       <itemPath>buf_img.h</itemPath>
+      <itemPath>color_reducer.c</itemPath>
+      <itemPath>color_reducer.h</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>pixel_dither.c</itemPath>
+      <itemPath>pixel_dither.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -49,6 +53,7 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <commandLine>-std=c99</commandLine>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>

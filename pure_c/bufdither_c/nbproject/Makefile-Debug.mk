@@ -35,7 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/buf_img.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/color_reducer.o \
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/pixel_dither.o
 
 
 # C Compiler Flags
@@ -67,10 +69,20 @@ ${OBJECTDIR}/buf_img.o: buf_img.c
 	${RM} $@.d
 	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/buf_img.o buf_img.c
 
+${OBJECTDIR}/color_reducer.o: color_reducer.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/color_reducer.o color_reducer.c
+
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/pixel_dither.o: pixel_dither.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/pixel_dither.o pixel_dither.c
 
 # Subprojects
 .build-subprojects:
