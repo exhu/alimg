@@ -37,6 +37,8 @@ inline static void correct_pixel(buf_img * img, int x, int y, int coef, const tr
 void pixel_dither_do(buf_img * img, color_reducer * reducer) {
     const int w = img->w;        
     const int h = img->h;
+    //const int last_row = h-1;
+    //const int last_col = w-1;
     trgba rgba;
     trgba rgba_reduced;
     trgba rgba_diff;
@@ -55,10 +57,26 @@ void pixel_dither_do(buf_img * img, color_reducer * reducer) {
             // order, apply error to original pixels
             // (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
 
-
+#if 1
             correct_pixel(img, x-1, y+1, 3, &rgba_diff);
             correct_pixel(img, x, y+1, 5, &rgba_diff);
             correct_pixel(img, x+1, y+1, 1, &rgba_diff);                
-            correct_pixel(img, x+1, y, 7, &rgba_diff);                                 
+            correct_pixel(img, x+1, y, 7, &rgba_diff);
+#else            
+            const bool not_last_row = (y < last_row);
+            const bool not_last_col = (x < last_col);
+            if (not_last_row) {
+                if (x > 0)
+                    correct_pixel(img, x-1, y+1, 3, &rgba_diff);
+                
+                correct_pixel(img, x, y+1, 5, &rgba_diff);
+
+                if (not_last_col)
+                    correct_pixel(img, x+1, y+1, 1, &rgba_diff);
+            }
+
+            if (not_last_col)
+               correct_pixel(img, x+1, y, 7, &rgba_diff);
+#endif
         }
 }

@@ -53,6 +53,7 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <commandlineTool>clang</commandlineTool>
           <commandLine>-std=c99 -march=native -mfpmath=sse</commandLine>
         </cTool>
         <ccTool>
