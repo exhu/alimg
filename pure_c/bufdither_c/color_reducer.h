@@ -25,6 +25,7 @@ typedef struct {
 void color_reducer_init(color_reducer * r);
 void color_reducer_to_closest(const color_reducer * r, const trgba * src, trgba * dest);
 
+
 #ifdef	__cplusplus
 }
 #endif

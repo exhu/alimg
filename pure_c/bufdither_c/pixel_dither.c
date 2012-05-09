@@ -1,6 +1,6 @@
 #include "pixel_dither.h"
 
-static int clamp(int v) {
+inline static int clamp(int v) {
     if (v < 0)
         return 0;
 
@@ -11,20 +11,20 @@ static int clamp(int v) {
 }
 
 
-static void calc_diff(trgba * out, const trgba * a, const trgba * b) {
+inline static void calc_diff(trgba * out, const trgba * a, const trgba * b) {
     for(int n = 0; n < 4; ++n) {
         out->rgba[n] = a->rgba[n] - b->rgba[n];
     }
 }
 
-static void apply_error(trgba * rgba, const trgba * diff, int coef) {
+inline static void apply_error(trgba * rgba, const trgba * diff, int coef) {
     for (int i = 0; i < 4; ++i) {
         rgba->rgba[i] = clamp(rgba->rgba[i] + diff->rgba[i] * coef / 16);
     }
 }
 
 
-static void correct_pixel(buf_img * img, int x, int y, int coef, const trgba * diff) {
+inline static void correct_pixel(buf_img * img, int x, int y, int coef, const trgba * diff) {
     if (buf_img_is_in_bounds(img, x, y)) {
         const int ofs = buf_img_ofs(img, x, y);
         trgba tmp;

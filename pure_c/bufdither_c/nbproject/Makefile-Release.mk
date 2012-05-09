@@ -41,7 +41,7 @@ OBJECTFILES= \
 
 
 # C Compiler Flags
-CFLAGS=-std=c99
+CFLAGS=-std=c99 -march=native -mfpmath=sse
 
 # CC Compiler Flags
 CCFLAGS=
