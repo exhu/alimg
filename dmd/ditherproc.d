@@ -90,11 +90,11 @@ public class PixelDither {
         RGBA rgba;
         RGBA rgbaReduced;
         int ofs;
-        bool notLastRow, notLastCol;
-        
-        const int lastRow = h-1;
-        const int lastCol = w-1;
-        
+        version(none) {
+            bool notLastRow, notLastCol;
+            const int lastRow = h-1;
+            const int lastCol = w-1;
+        }
         
         for(int y = 0; y < h; ++y)
             for(int x = 0; x < w; ++x) {
@@ -111,21 +111,28 @@ public class PixelDither {
                 // order, apply error to original pixels
                 // (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
                 
-                notLastRow = (y < lastRow);
-				notLastCol = (x < lastCol);
-                
-                if (notLastRow) {
-					if (x > 0)
-						correctPixel(x-1, y+1, 3);
-				
-					correctPixel(x, y+1, 5);
-					
-					if (notLastCol)
-						correctPixel(x+1, y+1, 1);
-				}
-                
-                if (notLastCol)    
-					correctPixel(x+1, y, 7);                                 
+                version(none) {
+                    notLastRow = (y < lastRow);
+                    notLastCol = (x < lastCol);
+                    
+                    if (notLastRow) {
+                        if (x > 0)
+                            correctPixel(x-1, y+1, 3);
+                    
+                        correctPixel(x, y+1, 5);
+                        
+                        if (notLastCol)
+                            correctPixel(x+1, y+1, 1);
+                    }
+                    
+                    if (notLastCol)    
+                        correctPixel(x+1, y, 7);
+                } else {
+                    correctPixel(x-1, y+1, 3);
+                    correctPixel(x, y+1, 5);
+                    correctPixel(x+1, y+1, 1);
+                    correctPixel(x+1, y, 7);
+                }
             }
         
         
@@ -134,12 +141,12 @@ public class PixelDither {
     }
     
     private void correctPixel(int x, int y, int coef) {
-        //if (img.isInBounds(x, y)) {
+        if (img.isInBounds(x, y)) {
             int ofs = img.ofs(x, y);
             img.getPixelAt(ofs, rgbaTemp);
             adjustTemp(coef);
             img.setPixelAt(ofs, rgbaTemp);
-        //}
+        }
     }
     
     private void adjustTemp(int coef) {

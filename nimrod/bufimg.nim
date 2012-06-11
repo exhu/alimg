@@ -2,7 +2,7 @@ import strutils
 import os
 
 type
-    TRGBA* = tuple[r,g,b,a : int]
+    TRGBA* = array[0..3, int]
     
     
     TBufImgBase* = object of TObject ## abstract interface for image access
@@ -54,14 +54,37 @@ proc save*(img : ref TBufImg, fn : string) =
     
     close(f) 
 
-
+# ---
+method width*(img : ref TBufImg): int = 
+    return img.w
+    
+    
+method height*(img : ref TBufImg): int = 
+    return img.h
+    
+    
+method ofs*(img : ref TBufImg, x, y: int): int = 
+    return y*img.w*4 + x*4
+    
+    
+method pixel*(img : ref TBufImg, ofs : int): TRGBA = 
+    for i in countup(0, 3):
+        result[i] = ze(img.buf[ofs + i])
+        
+        
+method pixel*(img : ref TBufImg, ofs : int, color: TRGBA) = 
+    for i in countup(0, 3):
+        let v = byte(color[i])
+        img.buf[ofs+i] = v
+        #if v < 0:
+        #    stdout.writeln(inttostr(color[i]) & " -> " & $v)
 
 # --------- tests
+when false:
+    var 
+        b : ref TBufImg
 
-var 
-    b : ref TBufImg
-
-new(b)
-b.load(paramStr(1))
-b.save(paramStr(2))
+    new(b)
+    b.load(paramStr(1))
+    b.save(paramStr(2))
 
