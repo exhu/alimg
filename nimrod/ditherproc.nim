@@ -32,9 +32,9 @@ proc newColorReducer*(pf : TPixelFormat) : ref TColorReducer =
         quit "only pf4444 is supported!"
     
      
-proc reduceToClosest*(red: ref TColorReducer, rgba: TRGBA): TRGBA =
+proc reduceToClosest*(red: ref TColorReducer, rgba: var TRGBA, reduced: var TRGBA)  =
     for i in countup(0, 3):
-        result[i] = red.downgr(rgba[i], i)
+        reduced[i] = red.downgr(rgba[i], i)
     
 
 # ------ TPixelDither
@@ -43,7 +43,7 @@ proc newPixelDither*(): ref TPixelDither =
     new(result)
     
     
-proc clamp(v : int) : int =
+proc clamp(v : int) : int {.inline.} =
     if v < 0:
         return(0)
 
@@ -53,7 +53,7 @@ proc clamp(v : int) : int =
     result = v
 
 
-proc calcDiff(pd: ref TPixelDither, rgba: TRGBA, rgbaReduced: TRGBA) =
+proc calcDiff(pd: ref TPixelDither, rgba: var TRGBA, rgbaReduced: var TRGBA) =
   for i in countup(0,3):
       pd.rgbaDiff[i] = rgba[i] - rgbaReduced[i]
 
@@ -64,10 +64,11 @@ proc adjustTemp(pd: ref TPixelDither, coef: int) =
 
 
 proc correctPixel(pd: ref TPixelDither, x, y, coef: int) =
+   #if pd.img.inBounds(x,y):
    let ofs = pd.img.ofs(x, y)
-   pd.rgbaTemp = pd.img.pixel(ofs)
+   pd.img.getpixel(ofs, pd.rgbaTemp)
    pd.adjustTemp(coef)
-   pd.img.pixel(ofs, pd.rgbaTemp)
+   pd.img.setpixel(ofs, pd.rgbaTemp)
 
   
 when false:  
@@ -83,26 +84,29 @@ proc ditherImage*(pd: ref TPixelDither, img: ref TBufImgBase, cr: ref TColorRedu
     for y in countup(0, lastRow):
         for x in countup(0, lastCol):
             let ofs = img.ofs(x,y)
-            let rgba = img.pixel(ofs)
-            let rgbaReduced = cr.reduceToClosest(rgba)
+            var rgba: TRGBA
+            img.getPixel(ofs, rgba)
+            var rgbaReduced: TRGBA
+            cr.reduceToClosest(rgba, rgbaReduced)
             
             #dumpRGBA(rgba)
             #stdout.write(" -> ")
             #dumpRGBA(rgbaReduced)
             #stdout.writeln("") 
             
-            img.pixel(ofs, rgbaReduced)
+            img.setpixel(ofs, rgbaReduced)
             
             pd.calcDiff(rgba, rgbaReduced)
     
             # order, apply error to original pixels
             # (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
 
-            let notLastRow = (y < lastRow)
-            let notLastCol = (x < lastCol)
-            
             when true:
-            
+
+                let notLastRow = (y < lastRow)
+                let notLastCol = (x < lastCol)
+                
+                
                 if notLastRow:
                     if x > 0:
                         pd.correctPixel(x-1, y+1, 3)
@@ -114,6 +118,12 @@ proc ditherImage*(pd: ref TPixelDither, img: ref TBufImgBase, cr: ref TColorRedu
 
                 if notLastCol:
                    pd.correctPixel(x+1, y, 7)
+               
+            else:
+                pd.correctPixel(x-1, y+1, 3)
+                pd.correctPixel(x, y+1, 5)
+                pd.correctPixel(x+1, y+1, 1)
+                pd.correctPixel(x+1, y, 7)
 
     pd.img = nil
     

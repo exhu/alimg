@@ -20,8 +20,8 @@ method inBounds*(img : ref TBufImgBase, x, y: int): bool =
 
 method ofs*(img : ref TBufImgBase, x, y: int): int = nil
 
-method pixel*(img : ref TBufImgBase, ofs : int): TRGBA = nil
-method pixel*(img : ref TBufImgBase, ofs : int, color: TRGBA) = nil
+method getPixel*(img : ref TBufImgBase, ofs : int, color: var TRGBA) = nil
+method setPixel*(img : ref TBufImgBase, ofs : int, color: var TRGBA) = nil
 
 
 # --------
@@ -63,16 +63,16 @@ method height*(img : ref TBufImg): int =
     return img.h
     
     
-method ofs*(img : ref TBufImg, x, y: int): int = 
+method ofs*(img : ref TBufImg, x, y: int): int {.inline.}= 
     return y*img.w*4 + x*4
     
     
-method pixel*(img : ref TBufImg, ofs : int): TRGBA = 
+method getPixel*(img : ref TBufImg, ofs : int, color: var TRGBA) {.inline.}= 
     for i in countup(0, 3):
-        result[i] = ze(img.buf[ofs + i])
+        color[i] = ze(img.buf[ofs + i])
         
         
-method pixel*(img : ref TBufImg, ofs : int, color: TRGBA) = 
+method setPixel*(img : ref TBufImg, ofs : int, color: var TRGBA) {.inline.}= 
     for i in countup(0, 3):
         let v = byte(color[i])
         img.buf[ofs+i] = v
