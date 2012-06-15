@@ -6,3 +6,9 @@
 /java/bufdither_java/build/
 /java/bufdither_java/dist/
 /java/bufdither_java/nbproject/private/
+/pure_c/bufdither_c/nbproject/private/
+/pure_c/bufdither_c/dist/Debug/
+/pure_c/bufdither_c/build/Debug/
+/pure_c/bufdither_c/build/Release/
+/pure_c/bufdither_c/dist/Release/
+

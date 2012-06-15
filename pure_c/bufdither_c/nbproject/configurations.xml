@@ -12,15 +12,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>BufImg.cpp</itemPath>
-      <itemPath>BufImg.h</itemPath>
-      <itemPath>ColorReducer.cpp</itemPath>
-      <itemPath>ColorReducer.h</itemPath>
-      <itemPath>PixelDither.cpp</itemPath>
-      <itemPath>PixelDither.h</itemPath>
-      <itemPath>PixelProvider.cpp</itemPath>
-      <itemPath>PixelProvider.h</itemPath>
-      <itemPath>main.cpp</itemPath>
+      <itemPath>buf_img.c</itemPath>
+      <itemPath>buf_img.h</itemPath>
+      <itemPath>color_reducer.c</itemPath>
+      <itemPath>color_reducer.h</itemPath>
+      <itemPath>main.c</itemPath>
+      <itemPath>pixel_dither.c</itemPath>
+      <itemPath>pixel_dither.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -42,6 +40,9 @@
         <compilerSet>default</compilerSet>
       </toolsSet>
       <compileType>
+        <cTool>
+          <commandLine>-std=c99</commandLine>
+        </cTool>
       </compileType>
     </conf>
     <conf name="Release" type="1">
@@ -52,6 +53,8 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <commandlineTool>clang</commandlineTool>
+          <commandLine>-std=c99 -march=native -mfpmath=sse</commandLine>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
