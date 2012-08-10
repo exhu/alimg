@@ -12,3 +12,6 @@
 /pure_c/bufdither_c/build/Release/
 /pure_c/bufdither_c/dist/Release/
 
+/java/img2buf/nbproject/private/
+/java/img2buf/dist/
+/java/img2buf/build/
