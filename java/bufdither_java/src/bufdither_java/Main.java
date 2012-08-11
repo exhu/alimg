@@ -29,9 +29,11 @@ public class Main {
         PixelDither dither = new PixelDither();
         ColorReducer reducer = new ColorReducer(ColorReducer.PixelFormat.pf4444);
         
+        /*
         for(int i = 0; i < 100; ++i) {
             dither.ditherImage(img, reducer);
         }
+        */
         
         img.save(dst);
         

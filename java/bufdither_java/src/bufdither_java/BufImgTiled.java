@@ -15,7 +15,7 @@ public class BufImgTiled extends BufImg {
     // 4 bytes per pixel * 4 pixels = 16 bytes, 16*4 = 64 bytes,
     // more chances for cache hit
     final static int TILE_SIZE_PX = 4;
-    final static int TILE_SIZE_BYTES = TILE_SIZE_PX * 4 * TILE_SIZE_PX;
+    final static int TILE_SIZE_BYTES = TILE_SIZE_PX * TILE_SIZE_PX * 4;
     
     private int tiledW = 0, tiledH = 0, tilesW = 0, tilesH = 0;
     private byte tiledBuf[];
@@ -40,7 +40,7 @@ public class BufImgTiled extends BufImg {
         int inTileX = x % TILE_SIZE_PX;
         int inTileY = y % TILE_SIZE_PX;
         
-        return (tileY * tilesW + tileY)*TILE_SIZE_BYTES + inTileY * TILE_SIZE_PX + inTileX * 4;
+        return (tileY * tilesW + tileX)*TILE_SIZE_BYTES + inTileY * TILE_SIZE_PX * 4 + inTileX * 4;
     }
     
     private void makeTiled() {
