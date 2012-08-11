@@ -15,9 +15,9 @@ import java.io.OutputStream;
  *
  * @author yur
  */
-public final class BufImg implements PixelProvider {
-    byte buf[];
-    int w,h;
+public class BufImg implements PixelProvider {
+    protected byte buf[];
+    private int w,h;
     
     BufImg() {
         w = 0;
@@ -31,7 +31,7 @@ public final class BufImg implements PixelProvider {
         buf = new byte[sz()];
     }
     
-    void load(String fn) throws FileNotFoundException, IOException {
+    public void load(String fn) throws FileNotFoundException, IOException {
         FileInputStream fin = new FileInputStream(fn);
         
         w = readInt(fin);
@@ -44,7 +44,8 @@ public final class BufImg implements PixelProvider {
         fin.close();        
     }
     
-    void save(String fn) throws FileNotFoundException, IOException {
+    
+    public void save(String fn) throws FileNotFoundException, IOException {
         FileOutputStream fout = new FileOutputStream(fn);
         writeInt(fout, w);
         writeInt(fout, h);
@@ -57,20 +58,22 @@ public final class BufImg implements PixelProvider {
         return (y*w + x)*4;
     }
     
-    private int sz() {
+    protected final int sz() {
         return w*h*4;
     }
     
     @Override
     public void setPixelAt(int byteofs, int rgba[]) {
-        for(int n = 0; n < 4; ++n)
+        for(int n = 0; n < 4; ++n) {
             buf[byteofs+n] = (byte)(rgba[n] & 0xFF);
+        }
     }
     
     @Override
     public void getPixelAt(int byteofs, int rgba[]) {
-        for(int n = 0; n < 4; ++n)
-            rgba[n] = (int)buf[byteofs+n] & 0xFF;        
+        for(int n = 0; n < 4; ++n) {
+            rgba[n] = (int)buf[byteofs+n] & 0xFF;
+        }        
     }
     
     /*
