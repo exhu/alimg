@@ -39,8 +39,11 @@ public class Utils {
         x &= 0x3FFF;
         y &= 0x3FFF;
         
-        int xMask = (x & 0x3) | ((x >> 2) << 4);
-        int yMask = ((y & 0x3) << 2) | ((y >> 2) << (xsizeBits + 2));
+        final int lowBits = 2;
+        final int lowBitsMask = (1 << lowBits) - 1;
+        
+        int xMask = (x & lowBitsMask) | ((x >> lowBits) << (lowBits*2));
+        int yMask = ((y & lowBitsMask) << lowBits) | ((y >> lowBits) << (xsizeBits + lowBits));
         int ofsV = (xMask | yMask) << 2; // shift for 2 bits rgba offset
         return ofsV;
     }
