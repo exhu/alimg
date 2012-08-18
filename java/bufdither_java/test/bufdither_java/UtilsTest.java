@@ -53,4 +53,36 @@ public class UtilsTest {
         assertEquals(expResult, result);
         
     }
+    
+    @Test
+    public void testBitsForInt() {
+        System.out.println("bitsForInt");
+        assertEquals(4, Utils.bitsForInt(15));
+        assertEquals(8, Utils.bitsForInt(255));
+        assertEquals(15, Utils.bitsForInt(32767));
+        assertEquals(16, Utils.bitsForInt(65535));
+        
+    }
+    
+    @Test
+    public void testSwOfs() {
+        int w = 1024;
+        int h = 1024;
+        int bits = Utils.bitsForInt(w-1);
+        int ofs = Utils.swOfs(0, 0, bits);
+        assertEquals(0, ofs);
+        ofs = Utils.swOfs(1, 0, bits);
+        assertEquals(4, ofs);
+        ofs = Utils.swOfs(2, 0, bits);
+        assertEquals(8, ofs);
+        ofs = Utils.swOfs(0, 1, bits);
+        assertEquals(16, ofs);
+        ofs = Utils.swOfs(w-1, h-1, bits);
+        assertEquals((h-1)*w*4 + (w-1)*4, ofs);
+        
+    }
+    
+    
+    
+    
 }

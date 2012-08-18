@@ -23,7 +23,7 @@ public class Main {
     }
     
     static void reduce(String src, String dst) throws FileNotFoundException, IOException {
-        BufImg img = new BufImgTiled();//new BufImg();
+        BufImg img = new BufImgSwizzled();//BufImgTiled();//new BufImg();
         img.load(src);
         
         PixelDither dither = new PixelDither();

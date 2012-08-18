@@ -20,6 +20,15 @@ public class BufImgTiled extends BufImg {
     private int tiledW = 0, tiledH = 0, tilesW = 0, tilesH = 0;
     private byte tiledBuf[];
     
+    protected int getTiledWidth() {
+        return tiledW;
+    }
+    
+    /// override to prepare to calculate offsets etc., called in makeTiled
+    /// just after the tiled buffer is created
+    protected void prepareOffsets() {
+        // Nothing to do there
+    }
     
     @Override
     public void load(String fn) throws FileNotFoundException, IOException {
@@ -52,13 +61,20 @@ public class BufImgTiled extends BufImg {
         
         tiledBuf = new byte[tiledW*tiledH*4];
         
+        prepareOffsets();
+        
         int bufOfs = 0;
         
         for(int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x, bufOfs += 4) {
-                int ofs = tiledOfs(x,y);
+                int ofs = ofs(x,y);
                 for(int b = 0; b < 4; ++b) {
-                    tiledBuf[ofs+b] = buf[bufOfs+b];
+                    try {
+                        tiledBuf[ofsCol(ofs, b)] = buf[bufOfs+b];
+                    }
+                    catch(ArrayIndexOutOfBoundsException e) {
+                        System.out.println("got!");
+                    }
                 }
             }
         }
@@ -69,9 +85,9 @@ public class BufImgTiled extends BufImg {
         
         for(int y = 0; y < getHeight(); ++y) {
             for (int x = 0; x < getWidth(); ++x, bufOfs += 4) {
-                int ofs = tiledOfs(x,y);
+                int ofs = ofs(x,y);
                 for(int b = 0; b < 4; ++b) {
-                    buf[bufOfs+b] = tiledBuf[ofs+b];
+                    buf[bufOfs+b] = tiledBuf[ofsCol(ofs, b)];
                 }
             }
         }
@@ -80,6 +96,10 @@ public class BufImgTiled extends BufImg {
     @Override
     public int ofs(int x, int y) {
         return tiledOfs(x, y);
+    }
+    
+    public int ofsCol(int ofs, int colN) {
+        return ofs + colN;
     }
 
     @Override
