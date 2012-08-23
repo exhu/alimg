@@ -5,7 +5,7 @@ type
     TPixelFormat* = enum
         pf4444, pf565, pf5551
         
-    TDowngradeProc = proc(a, cNum : int32): int32
+    TDowngradeProc = proc(a, cNum : int32): int32 {.nimcall.}
     
     TColorReducer* = object of TObject
         downgr: TDowngradeProc
@@ -20,7 +20,7 @@ var
   down4lookup: array[0..255, int32]
 
 
-proc downgrade4444(a, cNum : int32) : int32  =
+proc downgrade4444(a, cNum : int32) : int32 =
     result = down4lookup[a]
 
 
