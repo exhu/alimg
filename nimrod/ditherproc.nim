@@ -5,7 +5,7 @@ type
     TPixelFormat* = enum
         pf4444, pf565, pf5551
         
-    TDowngradeProc = proc(a, cNum : int): int
+    TDowngradeProc = proc(a, cNum : int32): int32
     
     TColorReducer* = object of TObject
         downgr: TDowngradeProc
@@ -17,10 +17,10 @@ type
         
 # ------ TColorReducer
 var
-  down4lookup: array[0..255, int]
+  down4lookup: array[0..255, int32]
 
 
-proc downgrade4444(a, cNum : int) : int  =
+proc downgrade4444(a, cNum : int32) : int32  =
     result = down4lookup[a]
 
 
@@ -33,7 +33,7 @@ proc newColorReducer*(pf : TPixelFormat) : ref TColorReducer =
     
      
 proc reduceToClosest*(red: ref TColorReducer, rgba: var TRGBA, reduced: var TRGBA)  =
-    for i in countup(0, 3):
+    for i in countup(0, 3'i32):
         reduced[i] = red.downgr(rgba[i], i)
     
 
@@ -43,7 +43,7 @@ proc newPixelDither*(): ref TPixelDither =
     new(result)
     
     
-proc clamp(v : int) : int {.inline.} =
+proc clamp(v : int32) : int32 {.inline.} =
     if v < 0:
         return(0)
 
@@ -58,12 +58,12 @@ proc calcDiff(pd: ref TPixelDither, rgba: var TRGBA, rgbaReduced: var TRGBA) =
       pd.rgbaDiff[i] = rgba[i] - rgbaReduced[i]
 
 
-proc adjustTemp(pd: ref TPixelDither, coef: int) =
+proc adjustTemp(pd: ref TPixelDither, coef: int32) =
   for i in countup(0,3):
     pd.rgbaTemp[i] = clamp(pd.rgbaTemp[i] + pd.rgbaDiff[i] * coef div 16)
 
 
-proc correctPixel(pd: ref TPixelDither, x, y, coef: int) =
+proc correctPixel(pd: ref TPixelDither, x, y, coef: int32) =
    #if pd.img.inBounds(x,y):
    let ofs = pd.img.ofs(x, y)
    pd.img.getpixel(ofs, pd.rgbaTemp)
@@ -139,11 +139,11 @@ proc ditherImage*(pd: ref TPixelDither, img: ref TBufImgBase, cr: ref TColorRedu
 #  result := (((a * maxv) div 255) * 255) div maxv;
 #end;
 
-proc downgrade4(a : int) : int =
+proc downgrade4(a : int32) : int32 =
   result = a * 15 div 255 * 17
 
 proc initlookup4 = 
-    for i in countup(0, 255):
+    for i in countup(0, 255'i32):
         down4lookup[i] = downgrade4(i)
         #stdout.writeln($i & " -> " & $down4lookup[i])
     #stdout.writeln "initialized lookup"
