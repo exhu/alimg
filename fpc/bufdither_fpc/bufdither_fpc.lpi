@@ -40,9 +40,8 @@
         <UnitName Value="bufdither_fpc"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-
-        <TopLine Value="8"/>
-        <CursorPos X="5" Y="5"/>
+        <TopLine Value="18"/>
+        <CursorPos X="18" Y="28"/>
         <UsageCount Value="27"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -62,7 +61,7 @@
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="7" Y="47"/>
+        <CursorPos X="29" Y="22"/>
         <UsageCount Value="27"/>
         <Loaded Value="True"/>
       </Unit2>
