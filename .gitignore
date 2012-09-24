@@ -12,3 +12,5 @@
 /pure_c/bufdither_c/build/Release/
 /pure_c/bufdither_c/dist/Release/
 
+/cpp/bufdither_cpp/build/
+/cpp/bufdither_cpp/dist/

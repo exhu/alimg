@@ -10,8 +10,8 @@ proc reduce(src, dst: string) =
     
     var dither = newPixelDither()
     
-    for i in countup(1, 100):
-        dither.ditherImage(img, cr)
+    for i in 1..100:
+      dither.ditherImage(img, cr)
     
     
     img.save(dst)

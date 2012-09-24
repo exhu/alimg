@@ -38,9 +38,10 @@
         <Filename Value="bufdither_fpc.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="bufdither_fpc"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="18"/>
+        <TopLine Value="17"/>
         <CursorPos X="18" Y="28"/>
         <UsageCount Value="27"/>
         <Loaded Value="True"/>
@@ -57,7 +58,6 @@
         <Filename Value="bufimg.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="bufimg"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
