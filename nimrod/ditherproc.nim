@@ -33,7 +33,7 @@ proc newColorReducer*(pf : TPixelFormat) : ref TColorReducer =
     
      
 proc reduceToClosest*(red: ref TColorReducer, rgba: var TRGBA, reduced: var TRGBA)  =
-    for i in countup(0, 3'i32):
+    for i in 0..3'i32:
         reduced[i] = red.downgr(rgba[i], i)
     
 
@@ -53,13 +53,13 @@ proc clamp(v : int32) : int32 {.inline.} =
     result = v
 
 
-proc calcDiff(pd: ref TPixelDither, rgba: var TRGBA, rgbaReduced: var TRGBA) =
-  for i in countup(0,3):
+proc calcDiff(pd: ref TPixelDither, rgba: TRGBA, rgbaReduced: TRGBA) =
+  for i in 0..3:
       pd.rgbaDiff[i] = rgba[i] - rgbaReduced[i]
 
 
 proc adjustTemp(pd: ref TPixelDither, coef: int32) =
-  for i in countup(0,3):
+  for i in 0..3:
     pd.rgbaTemp[i] = clamp(pd.rgbaTemp[i] + pd.rgbaDiff[i] * coef div 16)
 
 
@@ -81,8 +81,8 @@ proc ditherImage*(pd: ref TPixelDither, img: ref TBufImgBase, cr: ref TColorRedu
     let lastCol = img.width-1
     let lastRow = img.height-1
     
-    for y in countup(0, lastRow):
-        for x in countup(0, lastCol):
+    for y in 0..lastRow:
+        for x in 0..lastCol:
             let ofs = img.ofs(x,y)
             var rgba: TRGBA
             img.getPixel(ofs, rgba)

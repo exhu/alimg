@@ -21,7 +21,7 @@ method inBounds*(img : ref TBufImgBase, x, y: int32): bool =
 method ofs*(img : ref TBufImgBase, x, y: int32): int32 = nil
 
 method getPixel*(img : ref TBufImgBase, ofs : int32, color: var TRGBA) = nil
-method setPixel*(img : ref TBufImgBase, ofs : int32, color: var TRGBA) = nil
+method setPixel*(img : ref TBufImgBase, ofs : int32, color: TRGBA) = nil
 
 
 # --------
@@ -68,12 +68,12 @@ method ofs*(img : ref TBufImg, x, y: int32): int32 {.inline.}=
     
     
 method getPixel*(img : ref TBufImg, ofs : int32, color: var TRGBA) {.inline.}= 
-    for i in countup(0, 3):
+    for i in 0..3:
         color[i] = int32(img.buf[ofs + i])
         
         
-method setPixel*(img : ref TBufImg, ofs : int32, color: var TRGBA) {.inline.}= 
-    for i in countup(0, 3):
+method setPixel*(img : ref TBufImg, ofs : int32, color: TRGBA) {.inline.}= 
+    for i in 0..3:
         let v = uint8(color[i])
         img.buf[ofs+i] = v
         #if v < 0:

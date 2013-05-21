@@ -14,3 +14,6 @@
 
 /cpp/bufdither_cpp/build/
 /cpp/bufdither_cpp/dist/
+/java/img2buf/nbproject/private/
+/java/img2buf/dist/
+/java/img2buf/build/
