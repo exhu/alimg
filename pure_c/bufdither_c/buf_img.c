@@ -1,6 +1,6 @@
 #include "buf_img.h"
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 buf_img * buf_img_load(char * fn) {
