@@ -3,11 +3,81 @@
 local ffi = require("ffi")
 local bit = require("bit")
 
+
 module("bufimg")
 
+
 ffi.cdef[[
-typedef struct { uint8_t red, green, blue, alpha; } trgba;
+typedef struct { int32_t red, green, blue, alpha; } rgba_44;
 ]]
+
+BufImg = {
+}
+
+function BufImg.create()
+    local inst = {}
+    local m = {__index=BufImg}
+    setmetatable(inst, m)
+    return inst
+end
+
+function BufImg:w()
+    return self.w
+end
+
+function BufImg:h()
+    return self.h
+end
+
+function BufImg:ofs(x,y)
+    return self.w*y*4 + x*4
+end
+
+function BufImg:load(fn)
+    local f = ffi.C.fopen(fn, "rb")
+    local C = ffi.C
+    local wh = ffi.new("int32_t[1]")
+    C.fread(wh, 4, 1, f)
+    self.w = wh
+    C.fread(wh, 4, 1, f)
+    self.h = wh
+    self.sz = self.w * self.h * 4
+    self.buf = ffi.new("uint8_t[?]", self.sz)
+    C.fread(self.buf, self.sz, 1, f)
+    C.fclose(f)
+end
+
+function BufImg:save(fn)
+    local f = ffi.C.fopen(fn, "wb")
+    local C = ffi.C
+    local wh = ffi.new("int32_t[1]")
+    wh[0] = self.w
+    C.fwrite(wh, 4, 1, f)
+    wh[0] = self.h
+    C.fwrite(wh, 4, 1, f)
+    C.fwrite(self.buf, self.sz, 1, f)
+    C.fclose(f)
+end
+
+function BufImg:setPixelAt(byteofs, rgba)
+    for i = 0, 3 do
+        self.buf[byteofs + i] = rgba[i]
+    end
+end
+
+function BufImg:getPixelAt(byteofs, rgba)
+    for i = 0, 3 do
+        rgba[i] = self.buf[byteofs + i]
+    end
+end
+
+--[[
+
+ffi.cdef
+typedef struct { uint8_t red, green, blue, alpha; } trgba;
+
+
+
 
 
 function bytes_to_int(b1, b2, b3, b4)
@@ -58,6 +128,6 @@ function buf_img_save(img, fn)
     f:close()
 end
 
-
+--]]
 
 
