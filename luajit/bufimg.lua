@@ -1,13 +1,8 @@
 local ffi = require("ffi")
 local bit = require("bit")
-local setmetatable = setmetatable
-local tonumber = tonumber
-local error = error
-module("bufimg")
 
-
-
-
+local M = {    
+}
 
 
 ffi.cdef[[
@@ -19,15 +14,12 @@ size_t fread (void *__restrict __ptr, size_t __size,
 size_t fwrite (const void *__restrict __ptr, size_t __size,
 		      size_t __n, void *__restrict __s);
 
-		    
-typedef int32_t[4] rgba_44;
 ]]
 
+-- typedef int32_t[4] rgba_44;
 
-
-
-BufImg = {
-}
+local BufImg = {}
+M.BufImg = BufImg
 
 function BufImg.create()
     local inst = {}
@@ -150,4 +142,6 @@ end
 
 --]]
 
+-- export module:
+return M
 
