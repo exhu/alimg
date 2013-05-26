@@ -10,7 +10,10 @@ img:load(arg[1])
 local cr = color_reducer.ColorReducer.create()
 local pd = pixel_dither.PixelDither.create()
 
-pd:ditherImage(img, cr)
+
+for i = 0, 99 do
+    pd:ditherImage(img, cr)
+end
 
 img:save(arg[2])
 
