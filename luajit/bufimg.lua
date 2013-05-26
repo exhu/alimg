@@ -1,15 +1,30 @@
-
-
 local ffi = require("ffi")
 local bit = require("bit")
-
-
+local setmetatable = setmetatable
+local tonumber = tonumber
+local error = error
 module("bufimg")
 
 
+
+
+
+
 ffi.cdef[[
+void *fopen (const char * __filename,
+		    const char * __modes);
+int fclose (void *__stream);
+size_t fread (void *__restrict __ptr, size_t __size,
+		     size_t __n, void *__restrict __stream);
+size_t fwrite (const void *__restrict __ptr, size_t __size,
+		      size_t __n, void *__restrict __s);
+
+		    
 typedef struct { int32_t red, green, blue, alpha; } rgba_44;
 ]]
+
+
+
 
 BufImg = {
 }
@@ -34,13 +49,16 @@ function BufImg:ofs(x,y)
 end
 
 function BufImg:load(fn)
-    local f = ffi.C.fopen(fn, "rb")
+    if fn == nil then error("can't open nil") end
+
     local C = ffi.C
+    local f = C.fopen(fn, "rb")
+    
     local wh = ffi.new("int32_t[1]")
     C.fread(wh, 4, 1, f)
-    self.w = wh
+    self.w = wh[0]
     C.fread(wh, 4, 1, f)
-    self.h = wh
+    self.h = wh[0]
     self.sz = self.w * self.h * 4
     self.buf = ffi.new("uint8_t[?]", self.sz)
     C.fread(self.buf, self.sz, 1, f)
@@ -48,6 +66,8 @@ function BufImg:load(fn)
 end
 
 function BufImg:save(fn)
+    if fn == nil then error("can't open nil") end
+        
     local f = ffi.C.fopen(fn, "wb")
     local C = ffi.C
     local wh = ffi.new("int32_t[1]")

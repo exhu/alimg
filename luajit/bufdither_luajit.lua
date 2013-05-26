@@ -2,8 +2,9 @@
 
 local bufimg = require("bufimg")
 
-local img = bufimg_load(arg[1])
-bufimg.bufimg_save(img, arg[2])
+local img = bufimg.BufImg.create()
+img:load(arg[1])
+img:save(arg[2])
 
 print("finished.")
 
