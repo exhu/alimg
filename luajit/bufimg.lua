@@ -28,13 +28,10 @@ function BufImg.create()
     return inst
 end
 
-function BufImg:w()
-    return self.w
+function BufImg:isInBounds(x,y)
+    return ((x > 0) and (x < self.w) and (y > 0) and (y < self.h))
 end
 
-function BufImg:h()
-    return self.h
-end
 
 function BufImg:ofs(x,y)
     return self.w*y*4 + x*4
@@ -55,6 +52,8 @@ function BufImg:load(fn)
     self.buf = ffi.new("uint8_t[?]", self.sz)
     C.fread(self.buf, self.sz, 1, f)
     C.fclose(f)
+    
+    print("loaded image "..self.w.."x"..self.h.." sz = "..self.sz)
 end
 
 function BufImg:save(fn)
