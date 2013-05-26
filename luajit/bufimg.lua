@@ -20,7 +20,7 @@ size_t fwrite (const void *__restrict __ptr, size_t __size,
 		      size_t __n, void *__restrict __s);
 
 		    
-typedef struct { int32_t red, green, blue, alpha; } rgba_44;
+typedef int32_t[4] rgba_44;
 ]]
 
 
