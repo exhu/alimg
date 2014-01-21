@@ -12,3 +12,14 @@ The goal is to provide fast and easy to read and maintain implementations in
 different programming languages, i.e. optimized but not too much.
 
 bufdither_java -- dithering implementation in java.
+
+To run benchmarks you need to convert a 32-bit RGBA png image into a simple
+buf image. Use java/img2buf program to do the task:
+    java -jar dist/img2buf.jar src.png dst.buf
+
+You can convert back to png:
+    java -jar dist/img2buf.jar -b src.buf dst.png
+
+
+To run all benchmarks you need to pass src.buf and dst.buf:
+    bufdither_cpp src.buf dst_cpp.buf
