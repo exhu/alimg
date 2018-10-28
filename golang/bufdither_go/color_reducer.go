@@ -27,9 +27,8 @@ func (reducer *ColorReducer) Init() {
 	initLookup()
 }
 
-func (reducer *ColorReducer) Closest(src Rgba) (out Rgba) {
+func (reducer *ColorReducer) Closest(src, out *Rgba) {
 	for i, v := range src {
 		out[i] = reducer.downgradeFunc(v, i)
 	}
-	return out
 }

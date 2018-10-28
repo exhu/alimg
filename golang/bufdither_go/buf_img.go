@@ -92,15 +92,14 @@ func (img *BufImg) IsInBounds(x, y int) bool {
 	return (x >= 0) && (x < int(img.w)) && (y >= 0) && (y < int(img.h))
 }
 
-func (img *BufImg) SetPixel(ofs int, value Rgba) {
+func (img *BufImg) SetPixel(ofs int, value *Rgba) {
 	for i := 0; i < 4; i++ {
 		img.buf[ofs+i] = byte(value[i] & 0xFF)
 	}
 }
 
-func (img *BufImg) GetPixel(ofs int) (value Rgba) {
+func (img *BufImg) GetPixel(ofs int, value *Rgba) {
 	for i := 0; i < 4; i++ {
 		value[i] = int(img.buf[ofs+i])
 	}
-	return value
 }

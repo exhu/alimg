@@ -11,25 +11,25 @@ func clamp(v int) int {
 	}
 }
 
-func calcDiff(a, b Rgba) (out Rgba) {
+func calcDiff(a, b, out *Rgba) {
 	for i := range a {
 		out[i] = a[i] - b[i]
 	}
-	return out
 }
 
-func applyError(diff Rgba, coef int, inout *Rgba) {
+func applyError(diff *Rgba, coef int, inout *Rgba) {
 	for i := range inout {
 		inout[i] = clamp(inout[i] + diff[i]*coef/16)
 	}
 }
 
-func correctPixel(img *BufImg, x, y, coef int, diff Rgba) {
+func correctPixel(img *BufImg, x, y, coef int, diff *Rgba) {
 	if img.IsInBounds(x, y) {
 		ofs := img.Ofs(x, y)
-		tmp := img.GetPixel(ofs)
+		var tmp Rgba
+		img.GetPixel(ofs, &tmp)
 		applyError(diff, coef, &tmp)
-		img.SetPixel(ofs, tmp)
+		img.SetPixel(ofs, &tmp)
 	}
 }
 
@@ -41,14 +41,14 @@ func PixelDitherDo(img *BufImg, reducer *ColorReducer) {
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
 			ofs := img.Ofs(x, y)
-			rgba = img.GetPixel(ofs)
-			rgbaReduced = reducer.Closest(rgba)
-			img.SetPixel(ofs, rgbaReduced)
-			rgbaDiff = calcDiff(rgba, rgbaReduced)
-			correctPixel(img, x-1, y+1, 3, rgbaDiff)
-			correctPixel(img, x, y+1, 5, rgbaDiff)
-			correctPixel(img, x+1, y+1, 1, rgbaDiff)
-			correctPixel(img, x+1, y, 7, rgbaDiff)
+			img.GetPixel(ofs, &rgba)
+			reducer.Closest(&rgba, &rgbaReduced)
+			img.SetPixel(ofs, &rgbaReduced)
+			calcDiff(&rgba, &rgbaReduced, &rgbaDiff)
+			correctPixel(img, x-1, y+1, 3, &rgbaDiff)
+			correctPixel(img, x, y+1, 5, &rgbaDiff)
+			correctPixel(img, x+1, y+1, 1, &rgbaDiff)
+			correctPixel(img, x+1, y, 7, &rgbaDiff)
 		}
 	}
 }
