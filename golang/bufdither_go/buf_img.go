@@ -11,7 +11,7 @@ type BufImg struct {
 	w, h int32
 }
 
-type Rgba [4]int
+type Rgba [4]int32
 
 func readInt32(f *os.File) int32 {
 	var int32v [4]byte
@@ -84,22 +84,22 @@ func (img *BufImg) Save(fn string) {
 	f.Close()
 }
 
-func (img *BufImg) Ofs(x, y int) int {
-	return int(img.w)*y*4 + x*4
+func (img *BufImg) Ofs(x, y int32) int32 {
+	return img.w*y*4 + x*4
 }
 
-func (img *BufImg) IsInBounds(x, y int) bool {
-	return (x >= 0) && (x < int(img.w)) && (y >= 0) && (y < int(img.h))
+func (img *BufImg) IsInBounds(x, y int32) bool {
+	return (x >= 0) && (x < img.w) && (y >= 0) && (y < img.h)
 }
 
-func (img *BufImg) SetPixel(ofs int, value *Rgba) {
-	for i := 0; i < 4; i++ {
+func (img *BufImg) SetPixel(ofs int32, value *Rgba) {
+	for i := int32(0); i < 4; i++ {
 		img.buf[ofs+i] = byte(value[i] & 0xFF)
 	}
 }
 
-func (img *BufImg) GetPixel(ofs int, value *Rgba) {
-	for i := 0; i < 4; i++ {
-		value[i] = int(img.buf[ofs+i])
+func (img *BufImg) GetPixel(ofs int32, value *Rgba) {
+	for i := int32(0); i < 4; i++ {
+		value[i] = int32(img.buf[ofs+i])
 	}
 }

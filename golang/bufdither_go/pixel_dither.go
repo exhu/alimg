@@ -1,6 +1,6 @@
 package main
 
-func clamp(v int) int {
+func clamp(v int32) int32 {
 	switch {
 	case v < 0:
 		return 0
@@ -17,13 +17,13 @@ func calcDiff(a, b, out *Rgba) {
 	}
 }
 
-func applyError(diff *Rgba, coef int, inout *Rgba) {
+func applyError(diff *Rgba, coef int32, inout *Rgba) {
 	for i := range inout {
 		inout[i] = clamp(inout[i] + diff[i]*coef/16)
 	}
 }
 
-func correctPixel(img *BufImg, x, y, coef int, diff *Rgba) {
+func correctPixel(img *BufImg, x, y, coef int32, diff *Rgba) {
 	if img.IsInBounds(x, y) {
 		ofs := img.Ofs(x, y)
 		var tmp Rgba
@@ -34,12 +34,12 @@ func correctPixel(img *BufImg, x, y, coef int, diff *Rgba) {
 }
 
 func PixelDitherDo(img *BufImg, reducer *ColorReducer) {
-	w := int(img.w)
-	h := int(img.h)
+	w := img.w
+	h := img.h
 	var rgba, rgbaReduced, rgbaDiff Rgba
 
-	for y := 0; y < h; y++ {
-		for x := 0; x < w; x++ {
+	for y := int32(0); y < h; y++ {
+		for x := int32(0); x < w; x++ {
 			ofs := img.Ofs(x, y)
 			img.GetPixel(ofs, &rgba)
 			reducer.Closest(&rgba, &rgbaReduced)

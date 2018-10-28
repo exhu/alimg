@@ -1,24 +1,24 @@
 package main
 
 type ColorReducer struct {
-	downgradeFunc func(a, cNum int) int
+	downgradeFunc func(a, cNum int32) int32
 }
 
-func reduceColor(a, bits int) int {
-	var maxv = ((1 << uint(bits)) - 1)
+func reduceColor(a, bits int32) int32 {
+	var maxv = int32((1 << uint32(bits)) - 1)
 	// ((a / 255.f) * maxv) / maxv * 255.f
 	return a * maxv / 255 * 255 / maxv
 }
 
-var lookup4444 [256]int
+var lookup4444 [256]int32
 
 func initLookup() {
 	for i := range lookup4444 {
-		lookup4444[i] = reduceColor(i, 4)
+		lookup4444[i] = reduceColor(int32(i), 4)
 	}
 }
 
-func reduce4444(a, cNum int) int {
+func reduce4444(a, cNum int32) int32 {
 	return lookup4444[a]
 }
 
@@ -28,7 +28,7 @@ func (reducer *ColorReducer) Init() {
 }
 
 func (reducer *ColorReducer) Closest(src, out *Rgba) {
-	for i, v := range src {
-		out[i] = reducer.downgradeFunc(v, i)
+	for i := int32(0); i < 4; i++ {
+		out[i] = reducer.downgradeFunc(src[i], i)
 	}
 }
