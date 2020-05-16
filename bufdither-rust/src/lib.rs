@@ -41,7 +41,11 @@ impl PixelProvider for BufImg {
     }
 
     fn set_pixel_at(&mut self, byteofs: i32, rgba: &Rgba) {
-        self.data[byteofs as usize] = rgba.r as u8;
+        let ofs = byteofs as usize;
+        self.data[ofs] = rgba.r as u8;
+        self.data[ofs+1] = rgba.g as u8;
+        self.data[ofs+2] = rgba.b as u8;
+        self.data[ofs+3] = rgba.a as u8;
     }
 
     fn get_pixel_at(&self, byteofs: i32) -> Rgba {
