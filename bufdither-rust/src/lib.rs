@@ -1,6 +1,8 @@
 pub mod bufimg {
     use std::fs::File;
     use std::io::{Read, Write};
+    use std::rc::Rc;
+    use std::borrow::Borrow;
 
     #[derive(PartialEq, Debug)]
     pub struct Rgba {
@@ -108,7 +110,7 @@ pub mod bufimg {
 
     pub struct ColorReducer {
         downgrade: Box<DowngradeFn>,
-        lookups: [i32; 256],
+        lookups: Rc<[i32]>,
     }
 
     fn downgrade(a: i32, bits: i32) -> i32 {
@@ -117,34 +119,45 @@ pub mod bufimg {
         a * maxv / 255 * 255 / maxv
     }
 
+    fn lookup(table: &[i32], v:&Rgba) -> Rgba {
+        Rgba::new(table[v.r as usize], table[v.g as usize], table[v.b as usize], table[v.a as usize])
+    }
+
     impl ColorReducer {
         pub fn new(pf: PixelFormat) -> ColorReducer {
-            let mut reducer = ColorReducer { downgrade : Box::new(|_a| Rgba::new(0, 0, 0, 0)), lookups: [0; 256]};
+            let mut reducer = ColorReducer { downgrade : Box::new(|_a| Rgba::new(0, 0, 0, 0)), lookups: Rc::new([])};
+            reducer.init(pf);
+            reducer
+        }
+
+        fn init(&mut self, pf: PixelFormat) {
             match pf {
                 PixelFormat::Pf4444 => {
-                    for i in 0..255 {
-                        reducer.lookups[i] = 1;
+                    let mut lookups = [0i32; 256];
+                    for i in 0..256 {
+                        lookups[i] = downgrade(i as i32, 4);
                     }
 
-                    // here reducer is borrowed into closure :(
-                    reducer.downgrade = Box::new(|a| {
-                        Rgba::new(reducer.lookups[a.r as usize],
-                            reducer.lookups[a.g as usize],
-                            reducer.lookups[a.b as usize],
-                            reducer.lookups[a.a as usize])
-                    })
+                    self.lookups = Rc::new(lookups);
+                    let lookups = Rc::clone(&self.lookups);
+
+                    self.downgrade = Box::new(move |a| {
+                        lookup(lookups.borrow(), a)
+                    })                
                 },
                 _ => panic!("not implemented")
             }
-            
-            reducer
+        }
+
+        pub fn reduce_to_closest(&self, src: &Rgba) -> Rgba {
+            (self.downgrade)(src)
         }
     }
 
 
     #[cfg(test)]
     pub mod tests {
-        use crate::bufimg::{BufImg, PixelProvider, Rgba};
+        use crate::bufimg::*;
         use std::env;
         use std::fs;
 
@@ -192,6 +205,16 @@ pub mod bufimg {
             assert_eq!(read_sample, sample_rgba);
 
             Ok(())
+        }
+
+        #[test]
+        fn reduce_color() {
+            assert_eq!(255, downgrade(255, 4));
+
+            let reducer = ColorReducer::new(PixelFormat::Pf4444);
+            let orig = Rgba::new(230, 120, 127, 255);
+            let reduced = reducer.reduce_to_closest(&orig);
+            assert_eq!(reduced, Rgba::new(221, 119, 119, 255));
         }
     }
 }
