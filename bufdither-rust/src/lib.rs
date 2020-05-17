@@ -99,6 +99,48 @@ pub mod bufimg {
         }
     }
 
+    type DowngradeFn = dyn Fn(&Rgba) -> Rgba;
+    pub enum PixelFormat {
+        Pf4444,
+        Pf565,
+        Pf5551
+    }
+
+    pub struct ColorReducer {
+        downgrade: Box<DowngradeFn>,
+        lookups: [i32; 256],
+    }
+
+    fn downgrade(a: i32, bits: i32) -> i32 {
+        let maxv = (1 << bits) - 1;
+        // ((a / 255.f) * maxv) / maxv * 255.f
+        a * maxv / 255 * 255 / maxv
+    }
+
+    impl ColorReducer {
+        pub fn new(pf: PixelFormat) -> ColorReducer {
+            let mut reducer = ColorReducer { downgrade : Box::new(|_a| Rgba::new(0, 0, 0, 0)), lookups: [0; 256]};
+            match pf {
+                PixelFormat::Pf4444 => {
+                    for i in 0..255 {
+                        reducer.lookups[i] = 1;
+                    }
+
+                    // here reducer is borrowed into closure :(
+                    reducer.downgrade = Box::new(|a| {
+                        Rgba::new(reducer.lookups[a.r as usize],
+                            reducer.lookups[a.g as usize],
+                            reducer.lookups[a.b as usize],
+                            reducer.lookups[a.a as usize])
+                    })
+                },
+                _ => panic!("not implemented")
+            }
+            
+            reducer
+        }
+    }
+
 
     #[cfg(test)]
     pub mod tests {
