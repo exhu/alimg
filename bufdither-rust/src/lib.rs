@@ -143,7 +143,7 @@ pub mod bufimg {
 
                     self.downgrade = Box::new(move |a| {
                         lookup(lookups.borrow(), a)
-                    })                
+                    })
                 },
                 _ => panic!("not implemented")
             }
@@ -154,6 +154,62 @@ pub mod bufimg {
         }
     }
 
+    fn calc_diff(rgba: &Rgba, reduced: &Rgba) -> Rgba {
+        Rgba::new(rgba.r - reduced.r, rgba.g - reduced.g, rgba.b - reduced.b, rgba.a - reduced.a)
+    }
+
+    fn clamp(i: i32) -> i32 {
+        if i < 0 {
+            return 0;
+        } else if i > 255 {
+            return 255;
+        }
+        i
+    }
+
+    fn adjust_comp(c: i32, diff: i32, coef: i32) -> i32 {
+        clamp(c + diff * coef / 16)
+    }
+
+    fn adjust_rgba(rgba: &Rgba, diff: &Rgba, coef: i32) -> Rgba {
+        Rgba::new(adjust_comp(rgba.r, diff.r, coef),
+            adjust_comp(rgba.g, diff.g, coef),
+            adjust_comp(rgba.b, diff.b, coef),
+            adjust_comp(rgba.a, diff.a, coef))
+    }
+
+    fn correct_pixel(img: &mut dyn PixelProvider, diff: &Rgba, x: i32, y: i32, coef: i32) {
+        if img.is_in_bounds(x, y) {
+            let ofs = img.ofs(x, y);
+            let mut rgba = img.get_pixel_at(ofs);
+            rgba = adjust_rgba(&rgba, &diff, coef);
+            img.set_pixel_at(ofs, &rgba);
+        }
+    }
+
+    pub fn dither_image(img: &mut dyn PixelProvider, reducer: &ColorReducer) {
+        let w = img.get_width();
+        let h = img.get_height();
+
+        for y in 0..h {
+            for x in 0..w {
+                let ofs = img.ofs(x, y);
+                let rgba = img.get_pixel_at(ofs);
+                let rgba_reduced = reducer.reduce_to_closest(&rgba);
+                img.set_pixel_at(ofs, &rgba_reduced);
+                let diff = calc_diff(&rgba, &rgba_reduced);
+
+                //////////////////////////
+                // order, apply error to original pixels
+                // (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
+                
+                correct_pixel(img, &diff, x-1, y+1, 3);
+                correct_pixel(img, &diff, x, y+1, 5);
+                correct_pixel(img, &diff, x+1, y+1, 1);                
+                correct_pixel(img, &diff, x+1, y, 7);                                 
+            }
+        }
+    }
 
     #[cfg(test)]
     pub mod tests {
@@ -210,6 +266,8 @@ pub mod bufimg {
         #[test]
         fn reduce_color() {
             assert_eq!(255, downgrade(255, 4));
+            assert_eq!(0, downgrade(0, 4));
+            assert_eq!(119, downgrade(120, 4));
 
             let reducer = ColorReducer::new(PixelFormat::Pf4444);
             let orig = Rgba::new(230, 120, 127, 255);
