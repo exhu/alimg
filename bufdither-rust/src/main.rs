@@ -13,8 +13,8 @@ fn main() {
 
     let mut img = BufImg::load(srcfn).unwrap();
     let reducer = ColorReducer::new(PixelFormat::Pf4444);
-    for i in 0..100 {
+    //for _i in 0..100 {
         dither_image(&mut img, &reducer);
-    }
+    //}
     img.save(dstfn).unwrap();
 }
