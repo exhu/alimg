@@ -1,5 +1,4 @@
 import bufimg
-import strutils
 
 type
     TPixelFormat* = enum
@@ -7,10 +6,10 @@ type
         
     TDowngradeProc = proc(a, cNum : int32): int32 {.noconv.}
     
-    TColorReducer* = object of TObject
+    TColorReducer* = object
         downgr: TDowngradeProc
         
-    TPixelDither* = object of TObject
+    TPixelDither* = object
         rgbaDiff, rgbaTemp: TRGBA
         img: ref TBufImg
         
@@ -142,7 +141,7 @@ proc downgrade4(a : int32) : int32 =
   result = a * 15 div 255 * 17
 
 proc initlookup4 = 
-    for i in countup(0, 255'i32):
+    for i in countup(0'i32, 255'i32):
         down4lookup[i] = downgrade4(i)
         #stdout.writeln($i & " -> " & $down4lookup[i])
     #stdout.writeln "initialized lookup"

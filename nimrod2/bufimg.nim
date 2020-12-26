@@ -1,6 +1,3 @@
-import strutils
-import os
-
 type
     TRGBA* = array[0..3, int32]
     TBufImg* = object
@@ -15,7 +12,7 @@ proc inBounds*(img : ref TBufImg, x, y: int32): bool {.inline.}=
 # --------
 
 proc load*(img : ref TBufImg, fn : string) =
-    stdout.writeln("overriden")
+    echo("overriden")
     #load(PBufImgBase(img), fn)
     
     var f = open(fn)
@@ -26,7 +23,7 @@ proc load*(img : ref TBufImg, fn : string) =
     img.sz = img.w*img.h*4
     newSeq(img.buf, img.sz)
     
-    stdout.writeln(inttostr(img.w) & " by " & inttostr(img.h) & " allocated " & inttostr(img.sz))
+    echo("{img.w} by {img.h} allocated {img.sz}")
      
     discard f.readBuffer(img.buf[0].addr, img.sz)
     
