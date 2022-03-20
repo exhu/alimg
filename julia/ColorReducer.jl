@@ -27,7 +27,7 @@ end
 function downgrade(a::Int32, targetBitCount::Int32):Int32
     maxv = ((1 << targetBitCount) - 1)
     # ((a / 255.f) * maxv) / maxv * 255.f
-    a * maxv / 255 * 255 / maxv
+    div(div(a * maxv, 255) * 255, maxv)
 end
 
 function downgrade_component(a::Int32, cNum::Int32)::Int32

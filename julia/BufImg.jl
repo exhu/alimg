@@ -10,6 +10,10 @@ struct Img
     function Img(w::Int32, h::Int32) 
         new(w, h, Base.zeros(UInt8, sz(w,h)))
     end
+
+    function Img(w::Int32, h::Int32, buf) 
+        new(w, h, buf)
+    end
 end
 
 struct Rgba

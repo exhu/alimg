@@ -18,9 +18,9 @@ int main(int argc, char** argv) {
     color_reducer reducer;
     color_reducer_init(&reducer);
     
-    for(int i = 0; i < 100; ++i) {
+    //for(int i = 0; i < 100; ++i) {
         pixel_dither_do(img, &reducer);
-    }
+    //}
     
     buf_img_save(img, argv[2]);
     buf_img_release(img);

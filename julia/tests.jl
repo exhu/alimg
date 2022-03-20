@@ -8,8 +8,13 @@ using Main.ColorReducer
 using Main.PixelDither
 
 function test_save_load()
-    orig = Img(Int32(3),Int32(2))
-    @test length(orig.buf) == 3*2*4
+    img = Img(Int32(3),Int32(2))
+    set_pixel_at(img, ofs(img, Int32(1), Int32(1)), Rgba(1,2,3,4))
+    @test length(img.buf) == 3*2*4
+    save(img, "temp.buf")
+    new_img = load("temp.buf")
+    @test get_pixel_at(new_img, ofs(img, Int32(1), Int32(1))) ==
+        get_pixel_at(img, ofs(img, Int32(1), Int32(1)))
     true
 end
 
