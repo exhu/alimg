@@ -1,6 +1,6 @@
 module BufImg
 
-export Img, load, save, ofs, Rgba, set_pixel_at, get_pixel_at, sz
+export Img, load, save, ofs, Rgba, set_pixel_at, get_pixel_at, sz, is_in_bounds
 
 struct Img
     w::Int32
@@ -50,10 +50,8 @@ function sz(img::Img)::Int
     sz(img.w, img.h)
 end
 
-
-
 function ofs(img::Img, x::Int32, y::Int32)::Int
-    (y*img.w + x)*4
+    1+(y*img.w + x)*4
 end
 
 function set_pixel_at(img::Img, byte_ofs::Int, color::Rgba)
@@ -65,6 +63,10 @@ end
 
 function get_pixel_at(img::Img, byte_ofs::Int)::Rgba
     Rgba(img.buf[byte_ofs], img.buf[byte_ofs+1],img.buf[byte_ofs+2],img.buf[byte_ofs+3])
+end
+
+function is_in_bounds(img::Img, x::Int32, y::Int32)::Bool
+    x >= 0 && y >= 0 && x < img.w && y < img.h
 end
 
 
