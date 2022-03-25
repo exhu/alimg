@@ -24,10 +24,10 @@ function reduce_to_closest(o::ColorReducerObj, rgba::Rgba)::Rgba
     destRgba
 end
     
-function downgrade(a::Int32, targetBitCount::Int32):Int32
-    maxv = ((1 << targetBitCount) - 1)
+function downgrade(a::Int32, targetBitCount::Int32)::Int32
+    maxv = ((Int32(1) << targetBitCount) - Int32(1))
     # ((a / 255.f) * maxv) / maxv * 255.f
-    div(div(a * maxv, 255) * 255, maxv)
+    div(div(a * maxv, Int32(255)) * Int32(255), maxv)
 end
 
 function downgrade_component(a::Int32, cNum::Int32)::Int32

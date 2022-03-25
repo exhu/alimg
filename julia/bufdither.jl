@@ -2,9 +2,9 @@ include("BufImg.jl")
 include("ColorReducer.jl")
 include("PixelDither.jl")
 
-using Main.BufImg
-using Main.ColorReducer
-using Main.PixelDither
+using .BufImg
+using .ColorReducer
+using .PixelDither
 
 function main()
     if length(ARGS) != 2
