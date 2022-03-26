@@ -4,14 +4,14 @@ export ColorReducerObj, reduce_to_closest
 using Main.BufImg
 
 struct ColorReducerObj
-    lookups::Array{Int32}
+    lookups::Array{ChannelType}
 
     function ColorReducerObj()
         new(init_lookups())
     end
 end
 
-function reduce_color(o::ColorReducerObj, v::Int32)
+function reduce_color(o::ColorReducerObj, v::ChannelType)
     o.lookups[v+1]
 end
 
@@ -24,21 +24,21 @@ function reduce_to_closest(o::ColorReducerObj, rgba::Rgba)::Rgba
     destRgba
 end
     
-function downgrade(a::Int32, targetBitCount::Int32)::Int32
-    maxv = ((Int32(1) << targetBitCount) - Int32(1))
+function downgrade(a::ChannelType, targetBitCount::ChannelType)::ChannelType
+    maxv = ((ChannelType(1) << targetBitCount) - ChannelType(1))
     # ((a / 255.f) * maxv) / maxv * 255.f
-    div(div(a * maxv, Int32(255)) * Int32(255), maxv)
+    div(div(a * maxv, ChannelType(255)) * ChannelType(255), maxv)
 end
 
-function downgrade_component(a::Int32, cNum::Int32)::Int32
+function downgrade_component(a::ChannelType, cNum::ChannelType)::ChannelType
     # cNum not used
-    downgrade(a, Int32(4))
+    downgrade(a, ChannelType(4))
 end
 
 function init_lookups()
-    lookups = Base.zeros(Int32, 256)
-    for i::Int32 = 0:255
-        lookups[i+1] = downgrade_component(i::Int32, Int32(0))
+    lookups = Base.zeros(ChannelType, 256)
+    for i::ChannelType = 0:255
+        lookups[i+1] = downgrade_component(i::ChannelType, ChannelType(0))
     end
     lookups
 end

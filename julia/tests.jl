@@ -8,13 +8,13 @@ using Main.ColorReducer
 using Main.PixelDither
 
 function test_save_load()
-    img = Img(Int32(3),Int32(2))
-    set_pixel_at(img, ofs(img, Int32(1), Int32(1)), Rgba(1,2,3,4))
+    img = Img(WidthType(3), WidthType(2))
+    set_pixel_at(img, ofs(img, WidthType(1), WidthType(1)), Rgba(1,2,3,4))
     @test length(img.buf) == 3*2*4
     save(img, "temp.buf")
     new_img = load("temp.buf")
-    @test get_pixel_at(new_img, ofs(img, Int32(1), Int32(1))) ==
-        get_pixel_at(img, ofs(img, Int32(1), Int32(1)))
+    @test get_pixel_at(new_img, ofs(img, WidthType(1), WidthType(1))) ==
+        get_pixel_at(img, ofs(img, WidthType(1), WidthType(1)))
     true
 end
 
@@ -26,7 +26,7 @@ end
 
 function test_pixel_dither()
     cr = ColorReducerObj()
-    img = Img(Int32(3), Int32(2))
+    img = Img(WidthType(3), WidthType(2))
     pd = PixelDitherObj()
     dither_image(pd, img, cr)
     true
