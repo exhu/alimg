@@ -7,7 +7,7 @@ using Main.BufImg
 using Main.ColorReducer
 using Main.PixelDither
 
-using InteractiveUtils
+#using InteractiveUtils
 
 function test_save_load()
     img = Img(WidthType(3), WidthType(2))
@@ -32,7 +32,7 @@ function test_pixel_dither()
     cr = ColorReducerObj()
     img = Img(WidthType(16), WidthType(16))
     pd = PixelDitherObj()
-    @code_warntype dither_image(pd, img, cr)
+    dither_image(pd, img, cr)
     true
 end
 
@@ -45,9 +45,20 @@ function test_ofs()
     true
 end
 
+function test_array(buf)
+    for i = 1:length(buf)
+        buf[i] = (i*3) & 0xFF
+    end
+end
+
 @test test_save_load() == true
 @test test_color_reducer()
 @test test_pixel_dither()
 @test test_ofs()
 
 @time test_pixel_dither()
+@time test_pixel_dither()
+
+buf = zeros(UInt8, 640*480*4)
+@time test_array(buf)
+@time test_array(buf)

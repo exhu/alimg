@@ -4,7 +4,7 @@ export Img, load, save, ofs, Rgba, set_pixel_at, get_pixel_at, sz, is_in_bounds
 export WidthType, ChannelType
 
 const WidthType = Int
-const ChannelType = Int
+const ChannelType = Int32
 
 struct Img
     w::WidthType

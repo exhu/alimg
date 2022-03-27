@@ -12,24 +12,27 @@ struct PixelDitherObj
 end
 
 function dither_image(o::PixelDitherObj, img::Img, cr::ColorReducerObj)
-        for y::WidthType = 0:(img.h-1)
-            for x::WidthType = 0:(img.w-1)
-                ofs = BufImg.ofs(img, x, y)
-                rgba = get_pixel_at(img, ofs)
-                rgbaReduced = reduce_to_closest(cr, rgba)
-                set_pixel_at(img, ofs, rgbaReduced)
-                
-                rgbaDiff = calc_diff(rgba, rgbaReduced)
-                
-                # order, apply error to original pixels
-                # (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
-                
-                correct_pixel(img, WidthType(x-1), WidthType(y+1), 3, rgbaDiff);
-                correct_pixel(img, x, WidthType(y+1), 5, rgbaDiff);
-                correct_pixel(img, WidthType(x+1), WidthType(y+1), 1, rgbaDiff);                
-                correct_pixel(img, WidthType(x+1), y, 7, rgbaDiff);                                 
+        for y::WidthType = WidthType(0):(img.h-WidthType(1))
+            for x::WidthType = WidthType(0):(img.w-WidthType(1))
+                dither_pixel(img, cr, x, y)
             end
         end
+end
+
+function dither_pixel(img, cr, x, y)
+    ofs = BufImg.ofs(img, x, y)
+    rgba = get_pixel_at(img, ofs)
+    rgbaReduced = reduce_to_closest(cr, rgba)
+    set_pixel_at(img, ofs, rgbaReduced)
+    rgbaDiff = calc_diff(rgba, rgbaReduced)
+    
+    # order, apply error to original pixels
+    # (x-1,y+1) = 3/16 , (x,y+1) = 5/16, (x+1,y+1) = 1/16, (x+1, y)=7/16
+    
+    correct_pixel(img, WidthType(x-1), WidthType(y+1), 3, rgbaDiff);
+    correct_pixel(img, x, WidthType(y+1), 5, rgbaDiff);
+    correct_pixel(img, WidthType(x+1), WidthType(y+1), 1, rgbaDiff);                
+    correct_pixel(img, WidthType(x+1), y, 7, rgbaDiff);                                 
 end
 
 function correct_pixel(img, x::WidthType, y::WidthType, coef::Int, rgbaDiff)

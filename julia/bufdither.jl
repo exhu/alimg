@@ -15,7 +15,9 @@ function main()
     img = load(ARGS[1])
     cr = ColorReducerObj()
     pd = PixelDitherObj()
-    dither_image(pd, img, cr)
+    for i = 1:3
+        @time dither_image(pd, img, cr)
+    end
     save(img, ARGS[2])
 end
 
