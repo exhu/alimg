@@ -7,6 +7,8 @@ using Main.BufImg
 using Main.ColorReducer
 using Main.PixelDither
 
+using InteractiveUtils
+
 function test_save_load()
     img = Img(WidthType(3), WidthType(2))
     set_pixel_at(img, ofs(img, WidthType(1), WidthType(1)), Rgba(1,2,3,4))
@@ -15,6 +17,8 @@ function test_save_load()
     new_img = load("temp.buf")
     @test get_pixel_at(new_img, ofs(img, WidthType(1), WidthType(1))) ==
         get_pixel_at(img, ofs(img, WidthType(1), WidthType(1)))
+
+    get_pixel_at(img, ofs(img, WidthType(1), WidthType(1)))
     true
 end
 
@@ -26,12 +30,24 @@ end
 
 function test_pixel_dither()
     cr = ColorReducerObj()
-    img = Img(WidthType(3), WidthType(2))
+    img = Img(WidthType(16), WidthType(16))
     pd = PixelDitherObj()
-    dither_image(pd, img, cr)
+    @code_warntype dither_image(pd, img, cr)
+    true
+end
+
+function test_ofs()
+    img = Img(WidthType(640), WidthType(480))
+    @test length(img.buf) == (640*480*4)
+    @test sz(img) == (640*480*4)
+    @test ofs(img, 3, 1) == (640*4 + 3*4 +1)
+    @test ofs(img, 639, 479) == (640*4*479 + 639*4 +1)
     true
 end
 
 @test test_save_load() == true
 @test test_color_reducer()
 @test test_pixel_dither()
+@test test_ofs()
+
+@time test_pixel_dither()
