@@ -1,3 +1,3 @@
-To build with GDC use:
-gdc -frelease -O3 -march=native -mfpmath=sse bufdither_dmd.d bufimg.d ditherproc.d
+Tested with DMD64 D Compiler v2.099.0
+dub build -b release
 

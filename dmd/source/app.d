@@ -1,5 +1,3 @@
-/// Developed using 2.057 version of DMD compiler
-
 import std.stdio;
 import bufimg;
 import ditherproc;
@@ -17,8 +15,8 @@ void reduce(string src, string dst) {
 	PixelDither dither = new PixelDither();
 	ColorReducer reducer = new ColorReducer(ColorReducer.PixelFormat.pf4444);
 	
-	for(int i = 0; i < 100; ++i)
-		dither.ditherImage(img, reducer);
+	//for(int i = 0; i < 100; ++i)
+	dither.ditherImage(img, reducer);
 	
 	img.save(dst);
 }

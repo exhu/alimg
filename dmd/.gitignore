@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/bufdither-dmd
+bufdither-dmd.so
+bufdither-dmd.dylib
+bufdither-dmd.dll
+bufdither-dmd.a
+bufdither-dmd.lib
+bufdither-dmd-test-*
+*.exe
+*.o
+*.obj
+*.lst

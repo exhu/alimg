@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"yur"
+	],
+	"copyright": "Copyright © 2022, yur",
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "bufdither-dmd"
+}
